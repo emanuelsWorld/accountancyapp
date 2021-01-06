@@ -3,7 +3,7 @@ package ro.nexttech.internship.domain;
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity
+//@Entity
 public class Provider {
     @Id
     @Column(name="provider_id")

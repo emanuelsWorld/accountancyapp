@@ -3,7 +3,7 @@ package ro.nexttech.internship.domain;
 
 import javax.persistence.*;
 
-@Entity
+//@Entity
 @Table(name = "users")
 public class User {
     @Id

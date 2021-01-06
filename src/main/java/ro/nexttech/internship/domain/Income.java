@@ -3,7 +3,7 @@ package ro.nexttech.internship.domain;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
+//@Entity
 @Table(name = "incomes")
 public class Income {
     @Id

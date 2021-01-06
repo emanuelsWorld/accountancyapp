@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+//@Entity
 @Table(name="payments")
 public class Payment {
     @Id
