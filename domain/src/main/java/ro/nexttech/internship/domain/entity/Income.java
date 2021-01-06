@@ -7,21 +7,19 @@ import java.util.Date;
 @Table(name = "incomes")
 public class Income {
     @Id
-    @Column(name="income_id")
+    @Column(name = "income_id")
     private int incomeId;
-    @Column(name="ammount")
+    @Column(name = "ammount")
     private double ammount;
-    @Column(name="issueDate")
+    @Column(name = "issueDate")
     private Date date;
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
-
-
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private TransactionType type;
     @ManyToOne
-    @JoinColumn(name="firm_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Firm firm;
 
     public Income() {
@@ -36,6 +34,7 @@ public class Income {
         this.type = type;
         this.firm = firm;
     }
+
     public String getName() {
         return name;
     }
@@ -68,7 +67,6 @@ public class Income {
     public void setDate(Date date) {
         this.date = date;
     }
-
 
 
     public TransactionType getType() {

@@ -30,10 +30,10 @@ public class Invoice {
     @ManyToMany(mappedBy = "invoiceEntities")
     private Set<Payment> paymentEntities = new HashSet<>();
     @ManyToOne
-    @JoinColumn(name = "firm_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Firm firm;
     @ManyToOne
-    @JoinColumn(name = "invoice_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Provider provider;
 
     public Invoice() {
