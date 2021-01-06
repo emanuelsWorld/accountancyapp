@@ -7,11 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="rest-api" />
+        <module name="service-api-impl" />
         <module name="security" />
         <module name="rest-api-impl" />
-        <module name="domain" />
-        <module name="service-api-impl" />
         <module name="service-api" />
+        <module name="domain" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -26,7 +26,6 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="accountancy-app" options="-parameters" />
       <module name="domain" options="-parameters" />
       <module name="rest-api" options="-parameters" />
       <module name="rest-api-impl" options="-parameters" />
