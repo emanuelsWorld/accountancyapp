@@ -1,4 +1,4 @@
-package ro.nexttech.internship.accountancyapp;
+package ro.nexttech.internship;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

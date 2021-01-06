@@ -1,4 +1,4 @@
-package ro.nexttech.internship.accountancyapp;
+package ro.nexttech.internship;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

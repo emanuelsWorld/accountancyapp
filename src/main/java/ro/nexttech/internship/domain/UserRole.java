@@ -1,4 +1,4 @@
-package ro.nexttech.internship.domain.entity;
+package ro.nexttech.internship.domain;
 
 public enum UserRole {
     EMPLOYEE, MANAGER, ADMIN, GUEST

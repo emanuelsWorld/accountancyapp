@@ -1,4 +1,4 @@
-package ro.nexttech.internship.domain.entity;
+package ro.nexttech.internship.domain;
 
 import javax.persistence.*;
 import java.util.Set;
