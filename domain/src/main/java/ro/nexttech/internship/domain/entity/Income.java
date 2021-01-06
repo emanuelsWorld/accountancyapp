@@ -15,6 +15,8 @@ public class Income {
     private Date date;
     @Column(name="name")
     private String name;
+
+
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private TransactionType type;
@@ -26,14 +28,22 @@ public class Income {
 
     }
 
-    public Income(int incomeId, double ammount, Date date, String from, TransactionType type, Firm firm) {
+    public Income(int incomeId, double ammount, Date date, String name, TransactionType type, Firm firm) {
         this.incomeId = incomeId;
         this.ammount = ammount;
         this.date = date;
-        this.from = from;
+        this.name = name;
         this.type = type;
         this.firm = firm;
     }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
     public int getIncomeId() {
         return incomeId;
@@ -59,13 +69,7 @@ public class Income {
         this.date = date;
     }
 
-    public String getFrom() {
-        return from;
-    }
 
-    public void setFrom(String from) {
-        this.from = from;
-    }
 
     public TransactionType getType() {
         return type;
