@@ -7,7 +7,7 @@ import java.sql.Blob;
 import java.util.Set;
 
 public interface FileUploadService {
-    public void uploadToLocal(MultipartFile file);
-    public void uploadToDb(MultipartFile file);
+    public void uploadToDb(MultipartFile file, Integer id);
+
     public Blob downloadFile(Integer id);
 }

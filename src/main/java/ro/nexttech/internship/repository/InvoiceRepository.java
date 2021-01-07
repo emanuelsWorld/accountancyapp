@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ro.nexttech.internship.domain.Invoice;
 
 @Repository
-public interface InvoiceRepository extends JpaRepository<Invoice,Integer> {
+public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 }
