@@ -11,6 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 public class MultipartUploadExceptionHandler {
     @ExceptionHandler
     public String handleExceedFileLimit(MaxUploadSizeExceededException exception, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        return "File size limit exceeded. Please make sure the file size is under 128MB";
+        return "File size limit exceeded. Please make sure the file size is under 5MB";
     }
 }

@@ -40,6 +40,7 @@ public class Invoice {
 
     }
 
+
     public Invoice(int invoiceId, Date issueDate, Date dueDate, int number, double invoiceTotal, double paymentTotal, Blob fileData, Set<Payment> paymentEntities, Firm firm, Provider provider) {
         this.invoiceId = invoiceId;
         this.issueDate = issueDate;

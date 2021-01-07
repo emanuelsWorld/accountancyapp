@@ -1,6 +1,7 @@
 package ro.nexttech.internship.serviceImpl;
 
 
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ro.nexttech.internship.domain.Invoice;
@@ -8,10 +9,11 @@ import ro.nexttech.internship.repository.InvoiceRepository;
 import ro.nexttech.internship.service.FileUploadService;
 
 import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
+
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+
 
 @Service
 public class FileUploadServiceImpl implements FileUploadService {
@@ -24,24 +26,35 @@ public class FileUploadServiceImpl implements FileUploadService {
 
 
     @Override
-    public void uploadToDb(MultipartFile file, Integer id) {
+    public boolean uploadToDb(MultipartFile file, Integer id) {
         Invoice invoice = new Invoice();
         try {
             Blob blob = new SerialBlob(file.getBytes());
-            invoice = invoiceRepository.getOne(id);
-            invoice.setFileData(blob);
+
+            var value = invoiceRepository.findById(id);
+            if (value.isPresent()) {
+                invoice = value.get();
+                invoice.setFileData(blob);
+                invoiceRepository.save(invoice);
+                return true;
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (SerialException throwables) {
-            throwables.printStackTrace();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return false;
     }
 
     @Override
     public Blob downloadFile(Integer id) {
-        Invoice invoice = invoiceRepository.getOne(id);
-        return invoice.getFileData();
+        var val = invoiceRepository.findById(id);
+
+        if (val.isPresent())
+            return val.get().getFileData();
+        else {
+            return null;
+        }
     }
 }
