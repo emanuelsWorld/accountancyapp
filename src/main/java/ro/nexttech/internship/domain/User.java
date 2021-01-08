@@ -1,6 +1,8 @@
 package ro.nexttech.internship.domain;
 
 
+import ro.nexttech.internship.domain.permission.UserRole;
+
 import javax.persistence.*;
 
 @Entity
