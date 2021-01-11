@@ -26,7 +26,7 @@ public class User {
     private UserRole role;
     @ManyToOne
     @JoinColumn(name="firm_id", nullable = false)
-    private Firm firm;
+     private Firm firm;
     private boolean isActive;
 
     public User(){

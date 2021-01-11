@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ro.nexttech.internship.domain.permission.pojo.UserPojo;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
