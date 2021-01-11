@@ -14,7 +14,7 @@ public class PaymentController {
         return null;
     }
 
-    @PutMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) {
         if (payment == null) {
             return ResponseEntity.notFound().build();
@@ -28,7 +28,7 @@ public class PaymentController {
         return null;
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public String updatePayment() {
         return null;
     }

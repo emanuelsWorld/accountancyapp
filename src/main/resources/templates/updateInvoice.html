@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Invoice</title>
+</head>
+<body>
+<form th:action="'../saveInvoice/'" method="post">
+    <input type="number" name="id" id="id" hidden th:value="${invoice.getId()}">
+    <label for="number">Number</label>
+    <input name="number" id="number" type="number" th:value="${invoice.getNumber()}">
+    <label for="emitDate">Emit Date</label>
+    <input name="emitDate" id="emitDate" type="date" th:value="${invoice.getEmitDate()}">
+    <label for="scadentDate">Due date</label>
+    <input name="scadentDate" id="scadentDate" type="date" th:value="${invoice.getScadentDate()}">
+    <label for="value">Value</label>
+    <input name="value" id="value" type="number" th:value="${invoice.getValue()}">
+    <button name="submitInvoiceUpdate" type="submit" formmethod="post">Update</button>
+</form>
+</body>
+</html>

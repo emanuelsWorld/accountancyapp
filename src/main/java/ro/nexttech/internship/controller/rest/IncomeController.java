@@ -13,7 +13,7 @@ public class IncomeController {
         return null;
     }
 
-    @PutMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<Income> createIncome(@RequestBody Income income) {
         if (income == null) {
             return ResponseEntity.notFound().build();
@@ -27,7 +27,7 @@ public class IncomeController {
         return null;
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public String updateIncome() {
         return null;
     }

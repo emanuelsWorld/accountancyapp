@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link th:href="@{~/bootstrap.min.css}" rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <table class="table table-striped" style="width: 100%">
+        <tr class="row">
+            <th class="col-1">Id</th>
+            <th class="col-2">Username</th>
+            <th class="col-2">Password</th>
+            <th class="col-2">Email</th>
+            <th class="col-1">Role</th>
+            <th class="col-1">Firm Id</th>
+            <th class="col">Action</th>
+        </tr>
+        <div th:each="user : ${users}">
+            <tr class="row">
+                <td class="col-1" th:text="${user.getId()}">Id</td>
+                <td class="col-2" th:text="${user.getUsername()}">Username</td>
+                <td class="col-2" th:text="${user.getPassword()}">Password</td>
+                <td class="col-2" th:text="${user.getEmail()}">Email</td>
+                <td class="col-1" th:text="${user.getRole()}">getRole</td>
+                <td class="col-1" th:text="${user.getFirmId()}">FirmId</td>
+
+                <td class="float-lg-right col">
+                    <div class="row text-right">
+                        <form th:action="'users/deleteUser'" method="post">
+                            <button class="btn-group btn-danger" name="delete" formmethod="post" type="submit"
+                                    th:value="${user.getId()}">Del
+                            </button>
+                        </form>
+                        <a th:href="'users/updateUser/'+${user.getId()}">
+                            <button class="btn-group btn-success">Upd</button>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </div>
+        <form th:action="'users/addUser'" method="post" th:object="${newUser}">
+            <tr class="d-flex">
+                <td class="col-1"><input th:field="*{id}" type="number" name="id" id="id" size="10" required></td>
+                <td class="col-2"><input th:field="*{username}" name="username" id="username" type="text" size="10"
+                                         required></td>
+                <td class="col-2"><input th:field="*{password}" name="password" id="password" type="text" size="10"
+                                         required></td>
+                <td class="col-2"><input th:field="*{email}" name="email" id="email" type="text" size="10" required>
+                </td>
+                <td class="col-1"><input th:field="*{role}" name="role" id="role" type="text" size="10" required></td>
+                <td><input class="col-12" th:field="*{firmId}" name="firmId" id="firmId" type="number" size="4"
+                           required>
+                </td>
+                <td class="col-3">
+                    <button class="btn btn-primary" name="submitUserUpdate" type="submit" formmethod="post">Add user
+                    </button>
+                </td>
+            </tr>
+        </form>
+    </table>
+</div>
+</body>
+</html>

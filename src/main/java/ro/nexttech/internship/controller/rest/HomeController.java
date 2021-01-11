@@ -29,7 +29,7 @@ public class HomeController {
 
 
     //for testing Postman
-  //  @PostMapping("/invoices/addInv/{id}/{number}")
+    @PostMapping("/invoices/addInv/{id}/{number}")
     public Invoice addInvoice(@PathVariable("id") int id, @PathVariable("number") int number) {
         Invoice invoice = new Invoice();
         invoice.setNumber(number);

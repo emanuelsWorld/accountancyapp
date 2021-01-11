@@ -14,7 +14,7 @@ public class ProviderController {
         return null;
     }
 
-    @PutMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<Provider> createProvider(@RequestBody Provider provider) {
         if (provider == null) {
             return ResponseEntity.notFound().build();
@@ -28,7 +28,7 @@ public class ProviderController {
         return null;
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public String updateProvider() {
         return null;
     }

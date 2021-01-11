@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link th:href="@{~/bootstrap.min.css}" rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Welcome <span th:text="${user.userName}"></span></h1>
+    <div th:if="${user.role.equals('MANAGER')}">
+        <a href="users">Users</a>
+    </div>
+    <p th:text="${user.getRole()}"/>
+</div>
+</body>
+</html>

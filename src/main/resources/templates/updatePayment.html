@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Payment</title>
+</head>
+<body>
+<form class="form-control form-row" th:action="'../savePayment/'" method="post">
+    <input type="number" name="id" id="id" hidden th:value="${payment.getId()}">
+    <label for="type">Type</label>
+    <input name="type" id="type" type="text" th:value="${payment.getType()}">
+    <label for="date">Date</label>
+    <input name="date" id="date" type="date" th:value="${payment.getDate()}">
+    <label for="invoiceId">InvoiceNr.</label>
+    <select items="${invoiceId}" multiple="true" name="invoiceId" id="invoiceId" type="number">
+        <option size="10" th:each="invoice : ${invoices}" th:text="${invoice.getId()}"></option>
+    </select>
+
+    <label for="value">Value</label>
+    <input name="value" id="value" type="number" th:value="${payment.getValue()}">
+    <button name="submitPaymentUpdate" type="submit" formmethod="post">Update</button>
+</form>
+</body>
+</html>

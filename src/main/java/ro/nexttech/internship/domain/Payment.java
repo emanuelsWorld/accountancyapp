@@ -9,7 +9,8 @@ import java.util.Set;
 @Table(name="payments")
 public class Payment {
     @Id
-    private int payment_id;
+    @Column(name = "payment_id")
+    private int paymentId;
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private TransactionType type;
@@ -27,20 +28,20 @@ public class Payment {
 
     }
 
-    public Payment(int payment_id, TransactionType type, double ammount, Date date, Set<Invoice> invoiceEntities) {
-        this.payment_id = payment_id;
+    public Payment(int paymentId, TransactionType type, double ammount, Date date, Set<Invoice> invoiceEntities) {
+        this.paymentId = paymentId;
         this.type = type;
         this.ammount = ammount;
         this.date = date;
         this.invoiceEntities = invoiceEntities;
     }
 
-    public int getPayment_id() {
-        return payment_id;
+    public int getPaymentId() {
+        return paymentId;
     }
 
-    public void setPayment_id(int payment_id) {
-        this.payment_id = payment_id;
+    public void setPaymentId(int paymentId) {
+        this.paymentId = paymentId;
     }
 
     public TransactionType getType() {
