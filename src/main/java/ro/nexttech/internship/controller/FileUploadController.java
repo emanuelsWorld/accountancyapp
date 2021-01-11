@@ -1,8 +1,5 @@
 package ro.nexttech.internship.controller;
 
-
-import com.itextpdf.text.Document;
-
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.DescriptiveResource;
 import org.springframework.core.io.InputStreamResource;
@@ -19,12 +16,9 @@ import ro.nexttech.internship.exception.CompanyNotFound;
 import ro.nexttech.internship.service.CallAnafService;
 import ro.nexttech.internship.service.FileUploadService;
 import ro.nexttech.internship.service.GenerateReportService;
-import ro.nexttech.internship.serviceImpl.CallAnafServiceImpl;
-import ro.nexttech.internship.serviceImpl.GenerateReportServiceImpl;
+
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 

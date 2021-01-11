@@ -1,15 +1,13 @@
 package ro.nexttech.internship.service;
 
-import com.itextpdf.text.Document;
+import ro.nexttech.internship.domain.ReportDetails;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.Map;
+import java.util.List;
 
 
 public interface GenerateReportService {
-    double calculateIncomes(int firmId, int luna);
-    double calculateCosts(int firmId, int luna);
+    List<ReportDetails> getIncomes(int firmId, int luna);
+    List<ReportDetails> getInvoices(int firmId, int luna);
     ByteArrayInputStream generateReport(int firmId, int luna);
-    ByteArrayInputStream getReport(Map<String, String> myData);
 }

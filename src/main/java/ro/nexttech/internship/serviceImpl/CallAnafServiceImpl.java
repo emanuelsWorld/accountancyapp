@@ -1,9 +1,5 @@
 package ro.nexttech.internship.serviceImpl;
 
-
-
-
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -17,7 +13,6 @@ import ro.nexttech.internship.domain.CompanyDetails;
 import ro.nexttech.internship.exception.CompanyNotFound;
 import ro.nexttech.internship.service.CallAnafService;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

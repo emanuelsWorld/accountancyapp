@@ -1,24 +1,25 @@
 package ro.nexttech.internship.serviceImpl;
 
+
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-
 import org.springframework.stereotype.Service;
 import ro.nexttech.internship.domain.Income;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.domain.Payment;
+import ro.nexttech.internship.domain.ReportDetails;
 import ro.nexttech.internship.repository.FirmRepository;
 import ro.nexttech.internship.repository.IncomeRepository;
 import ro.nexttech.internship.service.GenerateReportService;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.time.Month;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,35 +36,30 @@ public class GenerateReportServiceImpl implements GenerateReportService {
     }
 
     @Override
-    public double calculateIncomes(int firmId, int luna) {
-        var incomes = firmRepository.findById(firmId).get().getIncomes();
-        var total = incomes.stream().filter(income -> income.getDate().getMonthValue() == luna).mapToDouble(Income::getAmmount).sum();
-        return total;
+    public List<ReportDetails> getIncomes(int firmId, int luna) {
+        List<ReportDetails> incomeList = new ArrayList<>();
+        var incomes = firmRepository.findById(firmId).get().getIncomes().stream().filter(income -> income.getDate().getMonthValue() == luna).collect(Collectors.toList());
+        for (Income income : incomes)
+            incomeList.add(new ReportDetails(income.getDate(), income.getAmmount(),true));
+        return incomeList;
+
     }
 
-    public double calculateCosts(int firmId, int luna) {
-        var invoices = firmRepository.findById(firmId).get().getInvoices();
-        double paymentTotal = 0;
-        var currentInvoices = invoices.stream().filter(invoice -> invoice.getIssueDate().getMonthValue() == luna).collect(Collectors.toList());
-        for (Invoice invoice : currentInvoices)
-            paymentTotal += invoice.getPaymentEntities().stream().mapToDouble(Payment::getAmmount).sum();
+    @Override
+    public List<ReportDetails> getInvoices(int firmId, int luna) {
+        var invoices = firmRepository.findById(firmId).get().getInvoices().stream().filter(invoice -> invoice.getIssueDate().getMonthValue() == luna).collect(Collectors.toList());
+        List<ReportDetails> invoiceList = new ArrayList<>();
+        for (Invoice invoice : invoices)
+            for (Payment payment : invoice.getPaymentEntities())
+                invoiceList.add(new ReportDetails(payment.getDate(), payment.getAmmount()));
 
-        return paymentTotal;
+        return invoiceList;
     }
 
+    @Override
     public ByteArrayInputStream generateReport(int firmId, int luna) {
-        var incomeTotal = calculateIncomes(firmId, luna);
-        var costTotal = calculateCosts(firmId, luna);
-        Map<String, String> myData = new HashMap<>();
-        myData.put("incomeTotal", Double.toString(incomeTotal));
-        myData.put("costTotal", Double.toString(costTotal));
-        myData.put("balance", Double.toString((incomeTotal - costTotal)));
-        return getReport(myData);
-
-
-    }
-
-    public ByteArrayInputStream getReport(Map<String, String> myData) {
+        List<ReportDetails> incomeList = getIncomes(firmId, luna);
+        List<ReportDetails> invoiceList = getInvoices(firmId, luna);
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
@@ -72,37 +68,64 @@ public class GenerateReportServiceImpl implements GenerateReportService {
             table.setWidths(new int[]{4, 4, 4});
             Font headFont = FontFactory.getFont(FontFactory.TIMES_ROMAN);
             PdfPCell hcell;
-            hcell = new PdfPCell(new Phrase("Income total: ", headFont));
+            hcell = new PdfPCell(new Phrase("Date: ", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("Cost total: ", headFont));
+            hcell = new PdfPCell(new Phrase("Credit: ", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("Balance: ", headFont));
+            hcell = new PdfPCell(new Phrase("Debit: ", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
-
             PdfPCell cell;
-            cell = new PdfPCell(new Phrase(myData.get("incomeTotal")));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(myData.get("costTotal")));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
+            List<ReportDetails> orderTransactions = new ArrayList<>();
+            for (ReportDetails reportIncome : incomeList)
+                orderTransactions.add(reportIncome);
+            for (ReportDetails reportInvoice : invoiceList)
+                orderTransactions.add(reportInvoice);
+            orderTransactions.sort((o1, o2) ->
+            {
+                return o1.getDate().compareTo(o2.getDate());
+            });
 
-            cell = new PdfPCell(new Phrase(myData.get("balance")));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
+            for (ReportDetails reportIncome : orderTransactions)
+                if (reportIncome.isCredit()) {
+                    cell = new PdfPCell(new Phrase(reportIncome.getDate().toString()));
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    table.addCell(cell);
+                    cell = new PdfPCell(new Phrase(reportIncome.getAmmount().toString()));
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    table.addCell(cell);
+                    cell = new PdfPCell(new Phrase(""));
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    table.addCell(cell);
+                }
+            else
+                {
+                    cell = new PdfPCell(new Phrase(reportIncome.getDate().toString()));
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    table.addCell(cell);
+                    cell = new PdfPCell(new Phrase(""));
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    table.addCell(cell);
+                    cell = new PdfPCell(new Phrase(reportIncome.getAmmount().toString()));
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    table.addCell(cell);
+
+                }
+
             PdfWriter.getInstance(document, out);
             document.open();
             document.add(table);
-
             document.close();
         } catch (DocumentException e) {
             e.printStackTrace();
