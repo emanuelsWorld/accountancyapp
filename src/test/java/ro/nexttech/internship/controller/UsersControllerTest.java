@@ -8,8 +8,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.User;
+import ro.nexttech.internship.repository.FirmRepository;
+import ro.nexttech.internship.repository.UserRepository;
 
-import static java.nio.file.Paths.get;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UsersController.class)

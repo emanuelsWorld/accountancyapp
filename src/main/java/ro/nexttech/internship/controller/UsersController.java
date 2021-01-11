@@ -8,6 +8,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.UserDto;
 import ro.nexttech.internship.filters.users.UserSpecificationBuilder;
+import ro.nexttech.internship.repository.UserRepository;
 
 import java.net.URI;
 import java.util.List;

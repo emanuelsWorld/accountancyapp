@@ -8,6 +8,7 @@ import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.Income;
 import ro.nexttech.internship.dto.FirmDto;
 import ro.nexttech.internship.filters.firms.FirmSpecificationBuilder;
+import ro.nexttech.internship.repository.FirmRepository;
 
 import java.util.List;
 

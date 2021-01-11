@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name="providers")
 public class Provider {
     @Id
     @Column(name="provider_id")
