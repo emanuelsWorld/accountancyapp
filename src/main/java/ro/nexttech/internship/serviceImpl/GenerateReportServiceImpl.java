@@ -1,8 +1,8 @@
 package ro.nexttech.internship.serviceImpl;
 
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import org.springframework.stereotype.Service;
@@ -13,10 +13,13 @@ import ro.nexttech.internship.repository.FirmRepository;
 import ro.nexttech.internship.repository.IncomeRepository;
 import ro.nexttech.internship.service.GenerateReportService;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.Month;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -28,7 +31,7 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 
     public GenerateReportServiceImpl(FirmRepository firmRepository, IncomeRepository incomeRepository) {
         this.firmRepository = firmRepository;
-        this.incomeRepository=incomeRepository;
+        this.incomeRepository = incomeRepository;
     }
 
     @Override
@@ -40,31 +43,70 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 
     public double calculateCosts(int firmId, int luna) {
         var invoices = firmRepository.findById(firmId).get().getInvoices();
-        double paymentTotal=0;
+        double paymentTotal = 0;
         var currentInvoices = invoices.stream().filter(invoice -> invoice.getIssueDate().getMonthValue() == luna).collect(Collectors.toList());
-        for(Invoice invoice:currentInvoices)
-            paymentTotal+=invoice.getPaymentEntities().stream().mapToDouble(Payment::getAmmount).sum();
+        for (Invoice invoice : currentInvoices)
+            paymentTotal += invoice.getPaymentEntities().stream().mapToDouble(Payment::getAmmount).sum();
 
         return paymentTotal;
     }
 
-    public Document generateReport(int firmId, int luna, ByteArrayOutputStream baos) {
+    public ByteArrayInputStream generateReport(int firmId, int luna) {
         var incomeTotal = calculateIncomes(firmId, luna);
         var costTotal = calculateCosts(firmId, luna);
-        String text=new String("Income total: "+incomeTotal+"\n"+"Cost total: "+costTotal+"\n"+"Balance: "+(incomeTotal-costTotal)+"\n"+"Month: "+Month.of(luna).name());
-        Document document=new Document();
+        Map<String, String> myData = new HashMap<>();
+        myData.put("incomeTotal", Double.toString(incomeTotal));
+        myData.put("costTotal", Double.toString(costTotal));
+        myData.put("balance", Double.toString((incomeTotal - costTotal)));
+        return getReport(myData);
+
+
+    }
+
+    public ByteArrayInputStream getReport(Map<String, String> myData) {
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            PdfWriter.getInstance(document,baos);
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(80);
+            table.setWidths(new int[]{4, 4, 4});
+            Font headFont = FontFactory.getFont(FontFactory.TIMES_ROMAN);
+            PdfPCell hcell;
+            hcell = new PdfPCell(new Phrase("Income total: ", headFont));
+            hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(hcell);
+
+            hcell = new PdfPCell(new Phrase("Cost total: ", headFont));
+            hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(hcell);
+
+            hcell = new PdfPCell(new Phrase("Balance: ", headFont));
+            hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(hcell);
+
+            PdfPCell cell;
+            cell = new PdfPCell(new Phrase(myData.get("incomeTotal")));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(myData.get("costTotal")));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(myData.get("balance")));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            PdfWriter.getInstance(document, out);
             document.open();
-            Chunk chunk=new Chunk(text);
-            document.add(chunk);
+            document.add(table);
+
+            document.close();
         } catch (DocumentException e) {
             e.printStackTrace();
         }
-
-        document.close();
-        return document;
-
-
+        return new ByteArrayInputStream(out.toByteArray());
     }
 }

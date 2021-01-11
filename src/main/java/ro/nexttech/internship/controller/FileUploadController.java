@@ -5,6 +5,7 @@ import com.itextpdf.text.Document;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.DescriptiveResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import ro.nexttech.internship.service.GenerateReportService;
 import ro.nexttech.internship.serviceImpl.CallAnafServiceImpl;
 import ro.nexttech.internship.serviceImpl.GenerateReportServiceImpl;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Blob;
@@ -75,10 +77,10 @@ public class FileUploadController {
     }
 
     @GetMapping("/report/{firmId}/{monthNumber}")
-    public byte[] getReport(@PathVariable("firmId") Integer firmId,@PathVariable("monthNumber") Integer monthNumber) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Document document=generateReportService.generateReport(firmId,monthNumber,baos);
-        byte[] pdfBytes=baos.toByteArray();
-        return pdfBytes;
+    public ResponseEntity<InputStreamResource> getReport(@PathVariable("firmId") Integer firmId, @PathVariable("monthNumber") Integer monthNumber) {
+        ByteArrayInputStream bais =   generateReportService.generateReport(firmId,monthNumber);
+      HttpHeaders headers=new HttpHeaders();
+        headers.add("Content-Disposition","attachment;"+firmId+".pdf");
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(bais));
     }
 }
