@@ -1,4 +1,4 @@
-package ro.nexttech.internship.controller.rest;
+package ro.nexttech.internship.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.dto.InvoiceDto;
-import ro.nexttech.internship.filters.invoices.InvoiceRepository;
 import ro.nexttech.internship.filters.invoices.InvoiceSpecificationBuilder;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package ro.nexttech.internship.controller.rest;
+package ro.nexttech.internship.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

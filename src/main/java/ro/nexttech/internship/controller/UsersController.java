@@ -1,4 +1,4 @@
-package ro.nexttech.internship.controller.rest;
+package ro.nexttech.internship.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -6,13 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ro.nexttech.internship.domain.User;
-import ro.nexttech.internship.domain.UserRole;
 import ro.nexttech.internship.dto.UserDto;
-import ro.nexttech.internship.filters.users.UserRepository;
 import ro.nexttech.internship.filters.users.UserSpecificationBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

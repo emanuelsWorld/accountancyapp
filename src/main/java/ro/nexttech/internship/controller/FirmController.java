@@ -1,4 +1,4 @@
-package ro.nexttech.internship.controller.rest;
+package ro.nexttech.internship.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.Income;
 import ro.nexttech.internship.dto.FirmDto;
-import ro.nexttech.internship.filters.firms.FirmRepository;
 import ro.nexttech.internship.filters.firms.FirmSpecificationBuilder;
 
 import java.util.List;
