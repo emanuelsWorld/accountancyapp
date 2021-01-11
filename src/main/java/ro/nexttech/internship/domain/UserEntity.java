@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
     @Id
     @Column(name="user_id")
     private int userId;
@@ -29,11 +29,11 @@ public class User {
      private Firm firm;
     private boolean isActive;
 
-    public User(){
+    public UserEntity(){
 
     }
 
-    public User(int userId, String userName, String firstName, String lastName, String userPassword, String email, UserRole userRole, Firm firm, boolean isActive) {
+    public UserEntity(int userId, String userName, String firstName, String lastName, String userPassword, String email, UserRole userRole, Firm firm, boolean isActive) {
         this.userId = userId;
         this.userName = userName;
         this.firstName = firstName;

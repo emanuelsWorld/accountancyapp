@@ -18,7 +18,7 @@ public class Firm {
     @Column(name="address")
     private String address;
     @OneToMany(mappedBy = "firm")
-    private Set<User> users;
+    private Set<UserEntity> users;
     @OneToMany(mappedBy = "firm")
     private Set<Income> incomes;
     @OneToMany(mappedBy = "firm")
@@ -27,7 +27,7 @@ public class Firm {
 
     }
 
-    public Firm(int firmId, String firmName, double bankBalance, double cashBalance, String address, Set<User> users, Set<Income> incomes, Set<Invoice> invoices) {
+    public Firm(int firmId, String firmName, double bankBalance, double cashBalance, String address, Set<UserEntity> users, Set<Income> incomes, Set<Invoice> invoices) {
         this.firmId = firmId;
         this.firmName = firmName;
         this.bankBalance = bankBalance;
@@ -78,11 +78,11 @@ public class Firm {
         this.address = address;
     }
 
-    public Set<User> getUsers() {
+    public Set<UserEntity> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(Set<UserEntity> users) {
         this.users = users;
     }
 
