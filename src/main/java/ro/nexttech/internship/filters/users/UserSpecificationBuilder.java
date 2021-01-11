@@ -50,4 +50,5 @@ public class UserSpecificationBuilder {
 
         return builder.build();
     }
+
 }

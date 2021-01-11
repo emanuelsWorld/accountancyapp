@@ -1,6 +1,7 @@
 package ro.nexttech.internship.domain;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -12,9 +13,9 @@ public class Income {
     @Column(name = "ammount")
     private double ammount;
     @Column(name = "issueDate")
-    private Date date;
-    @Column(name = "name")
-    private String name;
+    private LocalDate issueDate;
+    @Column(name = "income_name")
+    private String incomeName;
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private TransactionType type;
@@ -26,23 +27,14 @@ public class Income {
 
     }
 
-    public Income(int incomeId, double ammount, Date date, String name, TransactionType type, Firm firm) {
+    public Income(int incomeId, double ammount, LocalDate issueDate, String incomeName, TransactionType type, Firm firm) {
         this.incomeId = incomeId;
         this.ammount = ammount;
-        this.date = date;
-        this.name = name;
+        this.issueDate = issueDate;
+        this.incomeName = incomeName;
         this.type = type;
         this.firm = firm;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
 
     public int getIncomeId() {
         return incomeId;
@@ -60,14 +52,21 @@ public class Income {
         this.ammount = ammount;
     }
 
-    public Date getDate() {
-        return date;
+    public LocalDate getIssueDate() {
+        return issueDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setIssueDate(LocalDate issueDate) {
+        this.issueDate = issueDate;
     }
 
+    public String getIncomeName() {
+        return incomeName;
+    }
+
+    public void setIncomeName(String incomeName) {
+        this.incomeName = incomeName;
+    }
 
     public TransactionType getType() {
         return type;

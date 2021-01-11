@@ -5,11 +5,11 @@ import javax.persistence.*;
 import java.sql.Blob;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
-@Table(name = "invoices")
+@Table(name = "invoicess")
 public class Invoice {
 
     @Id
@@ -19,8 +19,8 @@ public class Invoice {
     private LocalDate issueDate;
     @Column(name = "dueDate")
     private LocalDate dueDate;
-    @Column(name = "invoiceNumber")
-    private int number;
+    @Column(name = "invoice_number")
+    private int invoiceNumber;
     @Column(name = "invoice_total")
     private double invoiceTotal;
     @Column(name = "payment_total")
@@ -29,7 +29,7 @@ public class Invoice {
     @Column(name = "file_data")
     private Blob fileData;
     @ManyToMany(mappedBy = "invoiceEntities")
-    private Set<Payment> paymentEntities = new HashSet<>();
+    private Set<Payment> paymentEntities;
     @ManyToOne
     @JoinColumn(nullable = false)
     private Firm firm;
@@ -41,16 +41,17 @@ public class Invoice {
 
     }
 
-    public Invoice(int invoiceId, LocalDate issueDate, LocalDate dueDate, int number, double invoiceTotal, double paymentTotal, Blob fileData, Set<Payment> paymentEntities, Firm firm) {
+    public Invoice(int invoiceId, LocalDate issueDate, LocalDate dueDate, int invoiceNumber, double invoiceTotal, double paymentTotal, Blob fileData, Set<Payment> paymentEntities, Firm firm, Provider provider) {
         this.invoiceId = invoiceId;
         this.issueDate = issueDate;
         this.dueDate = dueDate;
-        this.number = number;
+        this.invoiceNumber = invoiceNumber;
         this.invoiceTotal = invoiceTotal;
         this.paymentTotal = paymentTotal;
         this.fileData = fileData;
         this.paymentEntities = paymentEntities;
         this.firm = firm;
+        this.provider = provider;
     }
 
     public int getInvoiceId() {
@@ -77,12 +78,12 @@ public class Invoice {
         this.dueDate = dueDate;
     }
 
-    public int getNumber() {
-        return number;
+    public int getInvoiceNumber() {
+        return invoiceNumber;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setInvoiceNumber(int invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     public double getInvoiceTotal() {

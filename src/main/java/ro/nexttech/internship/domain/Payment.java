@@ -1,6 +1,7 @@
 package ro.nexttech.internship.domain;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,15 +10,17 @@ import java.util.Set;
 @Table(name="payments")
 public class Payment {
     @Id
-    @Column(name = "payment_id")
+    @Column(name="payment_id")
     private int paymentId;
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private TransactionType type;
     @Column(name="ammount")
     private double ammount;
-    @Column(name="date")
-    private Date date;
+    @Column(name="issueDate")
+    private LocalDate date;
+    @Column(name="payment_number")
+    private Integer paymentNumber;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "payments_invoices",
             joinColumns = {@JoinColumn(name = "paymentId")},
@@ -28,11 +31,12 @@ public class Payment {
 
     }
 
-    public Payment(int paymentId, TransactionType type, double ammount, Date date, Set<Invoice> invoiceEntities) {
+    public Payment(int paymentId, TransactionType type, double ammount, LocalDate date, Integer paymentNumber, Set<Invoice> invoiceEntities) {
         this.paymentId = paymentId;
         this.type = type;
         this.ammount = ammount;
         this.date = date;
+        this.paymentNumber = paymentNumber;
         this.invoiceEntities = invoiceEntities;
     }
 
@@ -60,12 +64,20 @@ public class Payment {
         this.ammount = ammount;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public Integer getPaymentNumber() {
+        return paymentNumber;
+    }
+
+    public void setPaymentNumber(Integer paymentNumber) {
+        this.paymentNumber = paymentNumber;
     }
 
     public Set<Invoice> getInvoiceEntities() {

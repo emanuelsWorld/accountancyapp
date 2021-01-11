@@ -93,7 +93,7 @@ public class FirmDto {
     public static FirmDto getDtoFromFirm(Firm firm) {
         FirmDto firmDto = new FirmDto();
         firmDto.setFirmId(firm.getFirmId());
-        firmDto.setName(firm.getName());
+        firmDto.setName(firm.getFirmName());
         firmDto.setAddress(firm.getAddress());
         firmDto.setBankBalance(firm.getBankBalance());
         firmDto.setCashBalance(firm.getCashBalance());

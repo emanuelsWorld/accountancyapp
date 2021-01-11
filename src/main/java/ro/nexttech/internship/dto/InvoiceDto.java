@@ -113,7 +113,7 @@ public class InvoiceDto {
     public static InvoiceDto getDtoFromInvoice(Invoice invoice) {
         InvoiceDto invoiceDto = new InvoiceDto();
         invoiceDto.setInvoiceId(invoice.getInvoiceId());
-        invoiceDto.setNumber(invoice.getNumber());
+        invoiceDto.setNumber(invoice.getInvoiceNumber());
         invoiceDto.setDueDate(invoice.getDueDate());
         invoiceDto.setIssueDate(invoice.getIssueDate());
         invoiceDto.setFileData(invoice.getFileData());

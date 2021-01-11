@@ -18,7 +18,7 @@ public class InvoiceController {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
-    @GetMapping("")
+    @GetMapping
     public List<InvoiceDto> searchInvoices(@RequestParam(value = "search") String search) {
         Specification<Invoice> spec = InvoiceSpecificationBuilder.getInvoiceSpec(search);
         return InvoiceDto.getDtoFromInvoiceList(invoiceRepository.findAll(spec));
@@ -29,7 +29,7 @@ public class InvoiceController {
         return null;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Invoice> createInvoice(@RequestBody Invoice invoice) {
         if (invoice == null) {
             return ResponseEntity.notFound().build();
@@ -38,12 +38,12 @@ public class InvoiceController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public String deleteInvoice() {
         return null;
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{id}")
     public String updateInvoice() {
         return null;
     }

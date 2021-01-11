@@ -9,8 +9,8 @@ public class Firm {
     @Id
     @Column(name="firm_id")
     private int firmId;
-    @Column(name="name")
-    private String name;
+    @Column(name="firm_name")
+    private String firmName;
     @Column(name="bank_balance")
     private double bankBalance;
     @Column(name="cash_balance")
@@ -27,9 +27,9 @@ public class Firm {
 
     }
 
-    public Firm(int firmId, String name, double bankBalance, double cashBalance, String address, Set<User> users, Set<Income> incomes, Set<Invoice> invoices) {
+    public Firm(int firmId, String firmName, double bankBalance, double cashBalance, String address, Set<User> users, Set<Income> incomes, Set<Invoice> invoices) {
         this.firmId = firmId;
-        this.name = name;
+        this.firmName = firmName;
         this.bankBalance = bankBalance;
         this.cashBalance = cashBalance;
         this.address = address;
@@ -46,12 +46,12 @@ public class Firm {
         this.firmId = firmId;
     }
 
-    public String getName() {
-        return name;
+    public String getFirmName() {
+        return firmName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirmName(String firmName) {
+        this.firmName = firmName;
     }
 
     public double getBankBalance() {

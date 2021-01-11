@@ -8,8 +8,8 @@ public class Provider {
     @Id
     @Column(name="provider_id")
     private int providerId;
-    @Column(name="name")
-    private String name;
+    @Column(name="provider_name")
+    private String providerName;
     @Column(name="address")
     private String address;
     @Column(name="CUI")
@@ -21,28 +21,28 @@ public class Provider {
 
     }
 
-    public Provider(int providerId, String name, String address, String cui, Set<Invoice> invoices) {
+    public Provider(int providerId, String providerName, String address, String cui, Set<Invoice> invoices) {
         this.providerId = providerId;
-        this.name = name;
+        this.providerName = providerName;
         this.address = address;
         this.cui = cui;
         this.invoices = invoices;
     }
 
-    public int getProviderId() {
+    public int getId() {
         return providerId;
     }
 
-    public void setProviderId(int providerId) {
+    public void setId(int providerId) {
         this.providerId = providerId;
     }
 
-    public String getName() {
-        return name;
+    public String getProviderName() {
+        return providerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 
     public String getAddress() {
@@ -68,4 +68,13 @@ public class Provider {
     public void setInvoices(Set<Invoice> invoices) {
         this.invoices = invoices;
     }
+
+    public int getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(int providerId) {
+        this.providerId = providerId;
+    }
 }
+

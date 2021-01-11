@@ -22,6 +22,7 @@ public class UserSpecification implements Specification<User> {
         String operation = criteria.getOperation();
         String key = criteria.getKey();
         Object value = criteria.getValue();
+
         if (operation.equalsIgnoreCase(">")) {
             return criteriaBuilder.greaterThan(root.get(key), value.toString());
         } else if (operation.equalsIgnoreCase("<")) {

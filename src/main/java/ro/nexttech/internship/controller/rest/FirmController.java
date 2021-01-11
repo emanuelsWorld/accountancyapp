@@ -19,7 +19,7 @@ public class FirmController {
     @Autowired
     private FirmRepository firmRepository;
 
-    @GetMapping("")
+    @GetMapping
     public List<FirmDto> searchFirms(@RequestParam(value = "search") String search) {
         Specification<Firm> spec = FirmSpecificationBuilder.getFirmSpec(search);
         return FirmDto.getDtoFromFirmList(firmRepository.findAll(spec));
@@ -30,7 +30,7 @@ public class FirmController {
         return null;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Firm> createFirm(@RequestBody Firm firm) {
         if (firm == null) {
             return ResponseEntity.notFound().build();
@@ -39,12 +39,12 @@ public class FirmController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public String deleteFirm() {
         return null;
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{id}")
     public String updateFirm() {
         return null;
     }

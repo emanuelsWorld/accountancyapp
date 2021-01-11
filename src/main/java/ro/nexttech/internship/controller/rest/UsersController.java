@@ -22,59 +22,42 @@ public class UsersController {
     @Autowired
     private UserRepository repository;
 
-    @GetMapping("")
-    public List<UserDto> searchUsers(@RequestParam(value = "search") String search) {
+    @GetMapping
+    public List<UserDto> searchUsers(@RequestParam(value = "search") String search, @RequestParam(value = "sort" , defaultValue = "No sorting") String sort) {
+        System.out.println("Search:"+ search);
+        System.out.println("Sorting:" + sort);
         Specification<User> spec = UserSpecificationBuilder.getUserSpec(search);
         return UserDto.getDtoFromUserList(repository.findAll(spec));
     }
 
-    @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") int id) {
-        return null;
-    }
+  //  @GetMapping
+   // public User getUser(@PathVariable("id") int id) {
+    //    return null;
+   // }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         if (user == null) {
             return ResponseEntity.notFound().build();
         } else {
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("{/id}")
-                    .buildAndExpand(user.getUserId(), user.getUserName(), user.getPassword())
+                    .buildAndExpand(user.getUserId(), user.getUserName(), user.getUserPassword())
                     .toUri();
             System.out.println(user.getUserName());
             return ResponseEntity.created(uri).body(user);
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public String deleteUser() {
         return null;
     }
 
-    @PutMapping("update")
+    @PutMapping("/{id}")
     public String updateUser() {
         return null;
     }
 
-    //mock Test
-    public User getSingleUser() {
-        User user = new User();
-        user.setUserId(1);
-        user.setUserName("TestUser");
-        user.setPassword("TestPassword");
-        user.setRole(UserRole.MANAGER);
-        return user;
-    }
 
-    public List<User> getUsersList(){
-        List<User> users = new ArrayList<>();
-        User user = new User();
-        user.setUserId(2);
-        user.setUserName("TestUser2");
-        user.setPassword("TestPassword2");
-        users.add(getSingleUser());
-        users.add(user);
-        return users;
-    }
 }

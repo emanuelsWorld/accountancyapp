@@ -102,9 +102,9 @@ public class UserDto {
         userDto.setUserName(user.getUserName());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
-        userDto.setPassword(user.getPassword());
+        userDto.setPassword(user.getUserPassword());
         userDto.setEmail(user.getEmail());
-        userDto.setRole(user.getRole());
+        userDto.setRole(user.getUserRole());
         userDto.setFirmId(user.getFirm().getFirmId());
         userDto.setActive(user.isActive());
         return userDto;
