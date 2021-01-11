@@ -8,7 +8,6 @@ import ro.nexttech.internship.domain.Provider;
 import javax.persistence.*;
 import java.sql.Blob;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
