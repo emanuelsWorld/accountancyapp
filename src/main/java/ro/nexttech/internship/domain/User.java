@@ -19,9 +19,9 @@ public class User {
     private String userPassword;
     @Column(name="email")
     private String email;
-    @Column(name="role")
+    @Column(name="user_role")
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole userRole;
     @ManyToOne
     @JoinColumn(name="firm_id", nullable = false)
     private Firm firm;
@@ -31,14 +31,14 @@ public class User {
 
     }
 
-    public User(int userId, String userName, String firstName, String lastName, String userPassword, String email, UserRole role, Firm firm, boolean isActive) {
+    public User(int userId, String userName, String firstName, String lastName, String userPassword, String email, UserRole userRole, Firm firm, boolean isActive) {
         this.userId = userId;
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userPassword = userPassword;
         this.email = email;
-        this.role = role;
+        this.userRole = userRole;
         this.firm = firm;
         this.isActive = isActive;
     }
@@ -91,12 +91,12 @@ public class User {
         this.email = email;
     }
 
-    public UserRole getRole() {
-        return role;
+    public UserRole getUserRole() {
+        return userRole;
     }
 
-    public void setRole(UserRole role) {
-        this.role = role;
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
     public Firm getFirm() {
