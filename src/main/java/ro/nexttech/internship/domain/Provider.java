@@ -7,9 +7,9 @@ import java.util.Set;
 public class Provider {
     @Id
     @Column(name="provider_id")
-    private int id;
-    @Column(name="name")
-    private int name;
+    private int providerId;
+    @Column(name="provider_name")
+    private String providerName;
     @Column(name="address")
     private String address;
     @Column(name="CUI")
@@ -21,28 +21,28 @@ public class Provider {
 
     }
 
-    public Provider(int id, int name, String address, String cui, Set<Invoice> invoices) {
-        this.id = id;
-        this.name = name;
+    public Provider(int providerId, String providerName, String address, String cui, Set<Invoice> invoices) {
+        this.providerId = providerId;
+        this.providerName = providerName;
         this.address = address;
         this.cui = cui;
         this.invoices = invoices;
     }
 
     public int getId() {
-        return id;
+        return providerId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int providerId) {
+        this.providerId = providerId;
     }
 
-    public int getName() {
-        return name;
+    public String getProviderName() {
+        return providerName;
     }
 
-    public void setName(int name) {
-        this.name = name;
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 
     public String getAddress() {
@@ -69,3 +69,4 @@ public class Provider {
         this.invoices = invoices;
     }
 }
+
