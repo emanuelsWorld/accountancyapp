@@ -68,5 +68,13 @@ public class Provider {
     public void setInvoices(Set<Invoice> invoices) {
         this.invoices = invoices;
     }
+
+    public int getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(int providerId) {
+        this.providerId = providerId;
+    }
 }
 
