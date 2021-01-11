@@ -2,7 +2,7 @@ package ro.nexttech.internship.dto;
 
 import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.User;
-import ro.nexttech.internship.domain.UserRole;
+import ro.nexttech.internship.domain.permission.UserRole;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.dto.InvoiceDto;
 import ro.nexttech.internship.filters.invoices.InvoiceSpecificationBuilder;
+import ro.nexttech.internship.repository.InvoiceRepository;
 
 import java.util.List;
 

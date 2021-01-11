@@ -2,12 +2,13 @@ package ro.nexttech.internship.domain;
 
 
 import ro.nexttech.internship.domain.permission.UserRole;
+import ro.nexttech.internship.pojo.UserPojo;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class User {
     @Id
     @Column(name="user_id")
     private int userId;
@@ -29,11 +30,20 @@ public class UserEntity {
      private Firm firm;
     private boolean isActive;
 
-    public UserEntity(){
+    public User(){
 
     }
 
-    public UserEntity(int userId, String userName, String firstName, String lastName, String userPassword, String email, UserRole userRole, Firm firm, boolean isActive) {
+    public UserPojo toUser() {
+        UserPojo user = new UserPojo();
+        user.setUserName(userName);
+        user.setUserPassword(userPassword);
+        user.setUserRole(userRole);
+        user.setActive(isActive);
+        return user;
+    }
+
+    public User(int userId, String userName, String firstName, String lastName, String userPassword, String email, UserRole userRole, Firm firm, boolean isActive) {
         this.userId = userId;
         this.userName = userName;
         this.firstName = firstName;

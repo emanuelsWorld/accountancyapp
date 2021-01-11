@@ -1,7 +1,11 @@
-package ro.nexttech.internship.security;
+package ro.nexttech.internship.dto;
 
-public class UserRequest {
+import javax.validation.constraints.NotBlank;
+
+public class UserRequestDto {
+    @NotBlank
     private String username;
+    @NotBlank
     private String password;
 
     public String getUsername() {

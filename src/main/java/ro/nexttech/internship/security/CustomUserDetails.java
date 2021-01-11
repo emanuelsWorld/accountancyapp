@@ -3,17 +3,13 @@ package ro.nexttech.internship.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ro.nexttech.internship.domain.permission.pojo.UserPojo;
+import ro.nexttech.internship.pojo.UserPojo;
 
 import java.util.Collection;
-
-import static java.util.stream.Collectors.toList;
+import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
     private UserPojo user;
-
-    public CustomUserDetails() {
-    }
 
     public CustomUserDetails(UserPojo user) {
         this.user = user;
@@ -21,39 +17,36 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getUserRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getUserRole().getLabel()))
-                .collect(toList());
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().getLabel()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return user.getUserPassword();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return user.getUserName();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return user.getAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return user.getAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return user.getCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return user.getEnabled();
+        return user.isActive();
     }
 }
