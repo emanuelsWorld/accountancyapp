@@ -1,7 +1,7 @@
 package ro.nexttech.internship.domain;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "incomes")
@@ -12,9 +12,9 @@ public class Income {
     @Column(name = "ammount")
     private double ammount;
     @Column(name = "issueDate")
-    private Date date;
-    @Column(name = "name")
-    private String name;
+    private LocalDate date;
+    @Column(name = "income_name")
+    private String incomeName;
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private TransactionType type;
@@ -26,21 +26,21 @@ public class Income {
 
     }
 
-    public Income(int incomeId, double ammount, Date date, String name, TransactionType type, Firm firm) {
+    public Income(int incomeId, double ammount, LocalDate date, String incomeName, TransactionType type, Firm firm) {
         this.incomeId = incomeId;
         this.ammount = ammount;
         this.date = date;
-        this.name = name;
+        this.incomeName = incomeName;
         this.type = type;
         this.firm = firm;
     }
 
-    public String getName() {
-        return name;
+    public String getIncomeName() {
+        return incomeName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIncomeName(String name) {
+        this.incomeName = incomeName;
     }
 
 
@@ -60,11 +60,11 @@ public class Income {
         this.ammount = ammount;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

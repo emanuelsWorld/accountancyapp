@@ -1,6 +1,8 @@
 package ro.nexttech.internship.controller;
 
 
+import com.itextpdf.text.Document;
+
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.DescriptiveResource;
 import org.springframework.core.io.Resource;
@@ -9,20 +11,33 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.multipart.MultipartFile;
+import ro.nexttech.internship.domain.CompanyDetails;
+import ro.nexttech.internship.exception.CompanyNotFound;
+import ro.nexttech.internship.service.CallAnafService;
 import ro.nexttech.internship.service.FileUploadService;
+import ro.nexttech.internship.service.GenerateReportService;
+import ro.nexttech.internship.serviceImpl.CallAnafServiceImpl;
+import ro.nexttech.internship.serviceImpl.GenerateReportServiceImpl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("/api")
 public class FileUploadController {
 
     private FileUploadService fileUploadService;
+    private CallAnafService callAnafService;
+    private GenerateReportService generateReportService;
 
-    public FileUploadController(FileUploadService fileUploadService) {
+    public FileUploadController(FileUploadService fileUploadService,CallAnafService callAnafService, GenerateReportService generateReportService) {
         this.fileUploadService = fileUploadService;
+        this.callAnafService=callAnafService;
+        this.generateReportService=generateReportService;
     }
 
     @PostMapping(value = "/upload/{id}")
@@ -48,5 +63,22 @@ public class FileUploadController {
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DescriptiveResource("Not found !"));
+    }
+    @GetMapping("/anaf/{id}")
+    public void getCompanyInfo(@PathVariable Integer id) {
+        try {
+            CompanyDetails companyDetails=callAnafService.call(id);
+        } catch (RestClientException | CompanyNotFound e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @GetMapping("/report/{firmId}/{monthNumber}")
+    public byte[] getReport(@PathVariable("firmId") Integer firmId,@PathVariable("monthNumber") Integer monthNumber) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Document document=generateReportService.generateReport(firmId,monthNumber,baos);
+        byte[] pdfBytes=baos.toByteArray();
+        return pdfBytes;
     }
 }

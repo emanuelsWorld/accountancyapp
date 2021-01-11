@@ -1,7 +1,8 @@
 package ro.nexttech.internship.domain;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,38 +10,39 @@ import java.util.Set;
 @Table(name="payments")
 public class Payment {
     @Id
-    private int payment_id;
+    @Column(name="payment_id")
+    private int paymentId;
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private TransactionType type;
     @Column(name="ammount")
     private double ammount;
-    @Column(name="date")
-    private Date date;
+    @Column(name="issueDate")
+    private LocalDate date;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "payments_invoices",
-            joinColumns = {@JoinColumn(name = "paymentId")},
-            inverseJoinColumns = {@JoinColumn(name = "invoiceId")})
+            joinColumns = {@JoinColumn(name = "payment_id")},
+            inverseJoinColumns = {@JoinColumn(name = "invoice_id")})
     Set<Invoice> invoiceEntities = new HashSet<>();
 
     public Payment(){
 
     }
 
-    public Payment(int payment_id, TransactionType type, double ammount, Date date, Set<Invoice> invoiceEntities) {
-        this.payment_id = payment_id;
+    public Payment(int paymentId, TransactionType type, double ammount, LocalDate date, Set<Invoice> invoiceEntities) {
+        this.paymentId = paymentId;
         this.type = type;
         this.ammount = ammount;
         this.date = date;
         this.invoiceEntities = invoiceEntities;
     }
 
-    public int getPayment_id() {
-        return payment_id;
+    public int getPaymentId() {
+        return paymentId;
     }
 
-    public void setPayment_id(int payment_id) {
-        this.payment_id = payment_id;
+    public void setPaymentId(int paymentId) {
+        this.paymentId = paymentId;
     }
 
     public TransactionType getType() {
@@ -59,11 +61,11 @@ public class Payment {
         this.ammount = ammount;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

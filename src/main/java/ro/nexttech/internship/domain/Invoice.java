@@ -3,23 +3,24 @@ package ro.nexttech.internship.domain;
 
 import javax.persistence.*;
 import java.sql.Blob;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
 
 @Entity
-@Table(name = "invoicess")
+@Table(name = "invoices")
 public class Invoice {
 
     @Id
     @Column(name = "invoice_id")
     private int invoiceId;
     @Column(name = "issueDate")
-    private Date issueDate;
+    private LocalDate issueDate;
     @Column(name = "dueDate")
-    private Date dueDate;
-    @Column(name = "number")
-    private int number;
+    private LocalDate dueDate;
+    @Column(name = "invoice_number")
+    private int invoiceNumber;
     @Column(name = "invoice_total")
     private double invoiceTotal;
     @Column(name = "payment_total")
@@ -41,11 +42,11 @@ public class Invoice {
     }
 
 
-    public Invoice(int invoiceId, Date issueDate, Date dueDate, int number, double invoiceTotal, double paymentTotal, Blob fileData, Set<Payment> paymentEntities, Firm firm, Provider provider) {
+    public Invoice(int invoiceId, LocalDate issueDate, LocalDate dueDate, int invoiceNumber, double invoiceTotal, double paymentTotal, Blob fileData, Set<Payment> paymentEntities, Firm firm, Provider provider) {
         this.invoiceId = invoiceId;
         this.issueDate = issueDate;
         this.dueDate = dueDate;
-        this.number = number;
+        this.invoiceNumber = invoiceNumber;
         this.invoiceTotal = invoiceTotal;
         this.paymentTotal = paymentTotal;
         this.fileData = fileData;
@@ -62,28 +63,28 @@ public class Invoice {
         this.invoiceId = invoiceId;
     }
 
-    public Date getIssueDate() {
+    public LocalDate getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(Date issueDate) {
+    public void setIssueDate(LocalDate issueDate) {
         this.issueDate = issueDate;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
-    public int getNumber() {
-        return number;
+    public int getInvoiceNumber() {
+        return invoiceNumber;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setInvoiceNumber(int invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     public double getInvoiceTotal() {
