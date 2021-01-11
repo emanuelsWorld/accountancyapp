@@ -38,9 +38,9 @@ public class GenerateReportServiceImpl implements GenerateReportService {
     @Override
     public List<ReportDetails> getIncomes(int firmId, int luna) {
         List<ReportDetails> incomeList = new ArrayList<>();
-        var incomes = firmRepository.findById(firmId).get().getIncomes().stream().filter(income -> income.getDate().getMonthValue() == luna).collect(Collectors.toList());
+        var incomes = firmRepository.findById(firmId).get().getIncomes().stream().filter(income -> income.getIssueDate().getMonthValue() == luna).collect(Collectors.toList());
         for (Income income : incomes)
-            incomeList.add(new ReportDetails(income.getDate(), income.getAmmount(),true));
+            incomeList.add(new ReportDetails(income.getIssueDate(), income.getAmmount(),true));
         return incomeList;
 
     }
