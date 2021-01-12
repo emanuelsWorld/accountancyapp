@@ -1,7 +1,7 @@
 package ro.nexttech.internship.domain.permission;
 
 public enum UserRole {
-    EMPLOYEE("ADMIN"), MANAGER("MANAGER"), ADMIN("ADMIN"), GUEST("GUEST");
+    EMPLOYEE("EMPLOYEE"), MANAGER("MANAGER"), ADMIN("ADMIN"), GUEST("GUEST");
     private String label;
 
     UserRole(String label) {

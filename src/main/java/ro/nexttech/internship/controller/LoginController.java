@@ -15,7 +15,7 @@ import ro.nexttech.internship.service.JwtService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/login")
+@RequestMapping("/login")
 public class LoginController {
 
     private AuthenticationManager authenticationManager;
