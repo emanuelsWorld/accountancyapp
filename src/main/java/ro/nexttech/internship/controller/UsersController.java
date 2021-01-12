@@ -21,6 +21,7 @@ public class UsersController {
     private UserRepository repository;
 
     @GetMapping
+
     public List<UserDto> searchUsers(@RequestParam(value = "search") String search, @RequestParam(value = "sort" , defaultValue = "No sorting") String sort) {
         System.out.println("Search:"+ search);
         System.out.println("Sorting:" + sort);
