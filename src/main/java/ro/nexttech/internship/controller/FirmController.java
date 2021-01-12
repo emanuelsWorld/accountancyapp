@@ -8,6 +8,7 @@ import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.Income;
 import ro.nexttech.internship.dto.FirmDto;
 import ro.nexttech.internship.filters.firms.FirmSpecificationBuilder;
+import ro.nexttech.internship.service.FirmService;
 
 import java.util.List;
 
@@ -15,13 +16,18 @@ import java.util.List;
 @RequestMapping("/rest/firms")
 public class FirmController {
 
+
+    private FirmService firmService;
+
     @Autowired
-    private FirmRepository firmRepository;
+    public void setFirmService(FirmService firmService) {
+        this.firmService = firmService;
+    }
 
     @GetMapping
     public List<FirmDto> searchFirms(@RequestParam(value = "search") String search) {
         Specification<Firm> spec = FirmSpecificationBuilder.getFirmSpec(search);
-        return FirmDto.getDtoFromFirmList(firmRepository.findAll(spec));
+        return FirmDto.getDtoFromFirmList(firmService.findAll(spec));
     }
 
     @GetMapping("/{id}")
