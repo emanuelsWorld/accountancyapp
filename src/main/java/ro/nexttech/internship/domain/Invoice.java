@@ -4,12 +4,11 @@ package ro.nexttech.internship.domain;
 import javax.persistence.*;
 import java.sql.Blob;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 
 @Entity
-@Table(name = "invoicess")
+@Table(name = "invoices")
 public class Invoice {
 
     @Id

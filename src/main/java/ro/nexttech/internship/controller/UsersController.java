@@ -8,6 +8,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.UserDto;
 import ro.nexttech.internship.filters.users.UserSpecificationBuilder;
+import ro.nexttech.internship.service.UserService;
 
 import java.net.URI;
 import java.util.List;
@@ -16,21 +17,20 @@ import java.util.List;
 @RequestMapping("/rest/users")
 public class UsersController {
 
+    private UserService userService;
+
     @Autowired
-    private UserRepository repository;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public List<UserDto> searchUsers(@RequestParam(value = "search") String search, @RequestParam(value = "sort" , defaultValue = "No sorting") String sort) {
         System.out.println("Search:"+ search);
         System.out.println("Sorting:" + sort);
         Specification<User> spec = UserSpecificationBuilder.getUserSpec(search);
-        return UserDto.getDtoFromUserList(repository.findAll(spec));
+        return UserDto.getDtoFromUserList(userService.findAll(spec));
     }
-
-  //  @GetMapping
-   // public User getUser(@PathVariable("id") int id) {
-    //    return null;
-   // }
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {

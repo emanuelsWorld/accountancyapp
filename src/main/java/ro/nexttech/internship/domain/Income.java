@@ -2,7 +2,6 @@ package ro.nexttech.internship.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "incomes")

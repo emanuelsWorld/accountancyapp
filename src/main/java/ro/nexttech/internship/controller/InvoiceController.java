@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.dto.InvoiceDto;
 import ro.nexttech.internship.filters.invoices.InvoiceSpecificationBuilder;
+import ro.nexttech.internship.service.InvoiceService;
+import ro.nexttech.internship.serviceImpl.InvoiceServiceImpl;
 
 import java.util.List;
 
@@ -14,13 +16,17 @@ import java.util.List;
 @RequestMapping("/rest/invoices")
 public class InvoiceController {
 
+    private InvoiceService invoiceService;
+
     @Autowired
-    private InvoiceRepository invoiceRepository;
+    public void setInvoiceService(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
+    }
 
     @GetMapping
     public List<InvoiceDto> searchInvoices(@RequestParam(value = "search") String search) {
         Specification<Invoice> spec = InvoiceSpecificationBuilder.getInvoiceSpec(search);
-        return InvoiceDto.getDtoFromInvoiceList(invoiceRepository.findAll(spec));
+        return InvoiceDto.getDtoFromInvoiceList(invoiceService.findAll(spec));
     }
 
     @GetMapping("/{id}")
