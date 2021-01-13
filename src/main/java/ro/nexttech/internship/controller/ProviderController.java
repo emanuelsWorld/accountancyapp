@@ -14,7 +14,7 @@ public class ProviderController {
         return null;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Provider> createProvider(@RequestBody Provider provider) {
         if (provider == null) {
             return ResponseEntity.notFound().build();
@@ -23,12 +23,12 @@ public class ProviderController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public String deleteProvider() {
         return null;
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{id}")
     public String updateProvider() {
         return null;
     }

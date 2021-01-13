@@ -1,13 +1,10 @@
 package ro.nexttech.internship.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.dto.InvoiceDto;
-import ro.nexttech.internship.filters.invoices.InvoiceSpecificationBuilder;
-import ro.nexttech.internship.repository.InvoiceRepository;
+import ro.nexttech.internship.service.InvoiceService;
 
 import java.util.List;
 
@@ -15,32 +12,39 @@ import java.util.List;
 @RequestMapping("/rest/invoices")
 public class InvoiceController {
 
-    @Autowired
-    private InvoiceRepository invoiceRepository;
+    private InvoiceService invoiceService;
 
-    @GetMapping
-    public List<InvoiceDto> searchInvoices(@RequestParam(value = "search") String search) {
-        Specification<Invoice> spec = InvoiceSpecificationBuilder.getInvoiceSpec(search);
-        return InvoiceDto.getDtoFromInvoiceList(invoiceRepository.findAll(spec));
+    @Autowired
+    public void setInvoiceService(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
     }
 
-    @GetMapping("/{id}")
-    public Invoice getInvoice(@PathVariable("id") int id) {
-        return null;
+    @GetMapping
+    public List<InvoiceDto> searchInvoices(@RequestParam(value = "search") String search,
+                                           @RequestParam(value = "sortField", required = false, defaultValue = "invoiceId") String sortField,
+                                           @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir,
+                                           @RequestParam(value = "pageSize", required = false, defaultValue = "5") Integer pageSize,
+                                           @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex) {
+
+        return invoiceService.searchInvoices(search, sortField, sortDir, pageSize, pageIndex);
     }
 
     @PostMapping
-    public ResponseEntity<Invoice> createInvoice(@RequestBody Invoice invoice) {
-        if (invoice == null) {
-            return ResponseEntity.notFound().build();
-        } else {
+    public InvoiceDto createInvoice(@RequestBody InvoiceDto invoiceDto) {
+        if (invoiceDto == null) {
             return null;
+        } else {
+            invoiceService.saveInvoiceDto(invoiceDto);
+            return invoiceDto;
         }
     }
 
-    @DeleteMapping
-    public String deleteInvoice() {
-        return null;
+    @DeleteMapping("/{id}")
+    public String deleteInvoice(@PathVariable("id") int id) {
+        if(invoiceService.deleteInvoice(id)) {
+            return "Invoice with id: " + id + "deleted successfully";
+        }
+        return "Invoice deletion unsuccessful";
     }
 
     @PutMapping("/{id}")

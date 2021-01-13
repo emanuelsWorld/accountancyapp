@@ -1,25 +1,16 @@
 package ro.nexttech.internship.dto;
 
-import ro.nexttech.internship.domain.Firm;
-import ro.nexttech.internship.domain.Invoice;
-import ro.nexttech.internship.domain.Payment;
-import ro.nexttech.internship.domain.Provider;
-
-import javax.persistence.*;
 import java.sql.Blob;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class InvoiceDto {
 
     private int invoiceId;
     private LocalDate issueDate;
     private LocalDate dueDate;
-    private int number;
+    private int invoiceNumber;
     private double invoiceTotal;
     private double paymentTotal;
     private Blob fileData;
@@ -54,12 +45,12 @@ public class InvoiceDto {
         this.dueDate = dueDate;
     }
 
-    public int getNumber() {
-        return number;
+    public int getInvoiceNumber() {
+        return invoiceNumber;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setInvoiceNumber(int invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     public double getInvoiceTotal() {
@@ -110,26 +101,5 @@ public class InvoiceDto {
         this.providerId = providerId;
     }
 
-    public static InvoiceDto getDtoFromInvoice(Invoice invoice) {
-        InvoiceDto invoiceDto = new InvoiceDto();
-        invoiceDto.setInvoiceId(invoice.getInvoiceId());
-        invoiceDto.setNumber(invoice.getInvoiceNumber());
-        invoiceDto.setDueDate(invoice.getDueDate());
-        invoiceDto.setIssueDate(invoice.getIssueDate());
-        invoiceDto.setFileData(invoice.getFileData());
-        invoiceDto.setInvoiceTotal(invoice.getInvoiceTotal());
-        invoiceDto.setFirmId(invoice.getFirm().getFirmId());
-        invoiceDto.setProviderId(invoice.getProvider().getProviderId());
-        invoiceDto.setPaymentEntities(
-                invoice.getPaymentEntities().stream().map(Payment::getPaymentId).collect(Collectors.toSet()));
-        invoiceDto.setPaymentTotal(invoice.getPaymentTotal());
 
-        return invoiceDto;
-    }
-
-    public static List<InvoiceDto> getDtoFromInvoiceList(List<Invoice> invoices) {
-        return invoices.stream()
-                .map(InvoiceDto::getDtoFromInvoice)
-                .collect(Collectors.toList());
-    }
 }

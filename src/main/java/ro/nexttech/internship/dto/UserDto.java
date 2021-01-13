@@ -1,19 +1,14 @@
 package ro.nexttech.internship.dto;
 
-import ro.nexttech.internship.domain.User;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class UserDto {
 
     private int userId;
     private String userName;
     private String firstName;
     private String lastName;
-    private String password;
+    private String userPassword;
     private String email;
-    private String role;
+    private String userRole;
     private int firmId;
     private boolean isActive;
 
@@ -52,12 +47,12 @@ public class UserDto {
         this.lastName = lastName;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public String getEmail() {
@@ -68,12 +63,12 @@ public class UserDto {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public String getUserRole() {
+        return userRole;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setUserRole(String role) {
+        this.userRole = role;
     }
 
     public boolean isActive() {
@@ -92,23 +87,4 @@ public class UserDto {
         this.firmId = firmId;
     }
 
-    public static UserDto getDtoFromUser(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setUserId(user.getUserId());
-        userDto.setUserName(user.getUserName());
-        userDto.setFirstName(user.getFirstName());
-        userDto.setLastName(user.getLastName());
-        userDto.setPassword(user.getUserPassword());
-        userDto.setEmail(user.getEmail());
-        userDto.setRole(user.getUserRole());
-        userDto.setFirmId(user.getFirm().getFirmId());
-        userDto.setActive(user.isActive());
-        return userDto;
-    }
-
-    public static List<UserDto> getDtoFromUserList(List<User> users) {
-        return users.stream()
-                .map(UserDto::getDtoFromUser)
-                .collect(Collectors.toList());
-    }
 }
