@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ro.nexttech.internship.pojo.UserPojo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,8 +18,15 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().getLabel()));
+        List<SimpleGrantedAuthority> userRoles = new ArrayList<>();
+        String[] splitRoles = user.getUserRole().split(";");
+        for (String role : splitRoles) {
+            SimpleGrantedAuthority grantedAuthoritiesRole = new SimpleGrantedAuthority("ROLE_" + role);
+            userRoles.add(grantedAuthoritiesRole);
+        }
+        return userRoles;
     }
+
 
     @Override
     public String getPassword() {

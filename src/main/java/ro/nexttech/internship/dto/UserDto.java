@@ -1,11 +1,7 @@
 package ro.nexttech.internship.dto;
 
-import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.User;
-import ro.nexttech.internship.domain.permission.UserRole;
 
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +13,7 @@ public class UserDto {
     private String lastName;
     private String password;
     private String email;
-    private UserRole role;
+    private String role;
     private int firmId;
     private boolean isActive;
 
@@ -72,11 +68,11 @@ public class UserDto {
         this.email = email;
     }
 
-    public UserRole getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

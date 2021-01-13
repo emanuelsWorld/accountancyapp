@@ -1,12 +1,10 @@
 package ro.nexttech.internship.pojo;
 
-import ro.nexttech.internship.domain.permission.UserRole;
-
 public class UserPojo {
 
     private String userName;
     private String userPassword;
-    private UserRole userRole;
+    private String userRole;
     private boolean isActive;
 
     public String getUserName() {
@@ -25,11 +23,11 @@ public class UserPojo {
         this.userPassword = userPassword;
     }
 
-    public UserRole getUserRole() {
+    public String getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(UserRole userRole) {
+    public void setUserRole(String userRole) {
         this.userRole = userRole;
     }
 
