@@ -8,6 +8,5 @@ import java.sql.Blob;
 
 public interface FileUploadService {
     boolean uploadToDb(MultipartFile file, Integer id);
-
     Blob downloadFile(Integer id);
 }

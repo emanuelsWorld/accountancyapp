@@ -9,10 +9,12 @@ import ro.nexttech.internship.repository.InvoiceRepository;
 import ro.nexttech.internship.service.FileUploadService;
 
 import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
 
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Optional;
 
 
 @Service
@@ -39,6 +41,8 @@ public class FileUploadServiceImpl implements FileUploadService {
                 return true;
             }
 
+        } catch (SerialException throwables) {
+            throwables.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException throwables) {
@@ -49,10 +53,15 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     @Override
     public Blob downloadFile(Integer id) {
-        var val = invoiceRepository.findById(id);
+        Optional<Invoice> invoice;
+        if(Invoice.getInvoiceMap().get(id)!=null) {
+            invoice= Optional.ofNullable(Invoice.getInvoiceMap().get(id));
+        }
+        else
+            invoice = invoiceRepository.findById(id);
 
-        if (val.isPresent())
-            return val.get().getFileData();
+        if (invoice.isPresent())
+            return invoice.get().getFileData();
         else {
             return null;
         }
