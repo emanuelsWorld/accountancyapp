@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.UserDto;
+import ro.nexttech.internship.pojo.UserPojo;
 import ro.nexttech.internship.repository.UserRepository;
 import ro.nexttech.internship.service.FirmService;
 import ro.nexttech.internship.service.UserService;
@@ -27,6 +28,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setFirmService(FirmService firmService) {
         this.firmService = firmService;
+    }
+
+    @Override
+    public Optional<UserPojo> getByUserName(String user) {
+        return userRepository.findByUserName(user).map(User::toUser);
     }
 
     @Override

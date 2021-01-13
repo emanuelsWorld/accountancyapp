@@ -93,4 +93,3 @@ public class InvoiceSpecification implements Specification<Invoice> {
                 '}';
     }
 }
-

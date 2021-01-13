@@ -6,21 +6,16 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
-import ro.nexttech.internship.domain.Income;
-import ro.nexttech.internship.domain.Invoice;
-import ro.nexttech.internship.domain.Payment;
-import ro.nexttech.internship.domain.ReportDetails;
+import ro.nexttech.internship.domain.*;
 import ro.nexttech.internship.repository.FirmRepository;
-import ro.nexttech.internship.repository.IncomeRepository;
+
 import ro.nexttech.internship.service.GenerateReportService;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
+
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -28,11 +23,10 @@ import java.util.stream.Collectors;
 public class GenerateReportServiceImpl implements GenerateReportService {
 
     private FirmRepository firmRepository;
-    private IncomeRepository incomeRepository;
 
-    public GenerateReportServiceImpl(FirmRepository firmRepository, IncomeRepository incomeRepository) {
+
+    public GenerateReportServiceImpl(FirmRepository firmRepository) {
         this.firmRepository = firmRepository;
-        this.incomeRepository = incomeRepository;
     }
 
     @Override
@@ -40,14 +34,21 @@ public class GenerateReportServiceImpl implements GenerateReportService {
         List<ReportDetails> incomeList = new ArrayList<>();
         var incomes = firmRepository.findById(firmId).get().getIncomes().stream().filter(income -> income.getIssueDate().getMonthValue() == luna).collect(Collectors.toList());
         for (Income income : incomes)
-            incomeList.add(new ReportDetails(income.getIssueDate(), income.getAmmount(),true));
+            incomeList.add(new ReportDetails(income.getIssueDate(), income.getAmmount(), true));
         return incomeList;
 
     }
 
     @Override
     public List<ReportDetails> getInvoices(int firmId, int luna) {
-        var invoices = firmRepository.findById(firmId).get().getInvoices().stream().filter(invoice -> invoice.getIssueDate().getMonthValue() == luna).collect(Collectors.toList());
+        Firm firm=null;
+        try {
+            firm=firmRepository.findById(firmId).get();
+
+        } catch (NoSuchElementException nsee) {
+            nsee.printStackTrace();
+        }
+        var invoices=firm.getInvoices().stream().filter(invoice -> invoice.getIssueDate().getMonthValue() == luna).collect(Collectors.toList());
         List<ReportDetails> invoiceList = new ArrayList<>();
         for (Invoice invoice : invoices)
             for (Payment payment : invoice.getPaymentEntities())
@@ -105,9 +106,7 @@ public class GenerateReportServiceImpl implements GenerateReportService {
                     cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                     cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     table.addCell(cell);
-                }
-            else
-                {
+                } else {
                     cell = new PdfPCell(new Phrase(reportIncome.getDate().toString()));
                     cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                     cell.setHorizontalAlignment(Element.ALIGN_CENTER);

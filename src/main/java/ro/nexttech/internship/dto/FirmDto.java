@@ -5,9 +5,6 @@ import ro.nexttech.internship.domain.Income;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.domain.User;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

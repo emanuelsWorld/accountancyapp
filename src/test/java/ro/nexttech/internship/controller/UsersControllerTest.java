@@ -17,7 +17,6 @@ import java.net.URISyntaxException;
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UsersControllerTest {
 
-
     //TODO mock service
     @LocalServerPort
     int serverPort;

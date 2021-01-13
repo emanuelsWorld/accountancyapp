@@ -1,11 +1,9 @@
 package ro.nexttech.internship.domain;
 
-
 import javax.persistence.*;
 import java.sql.Blob;
 import java.time.LocalDate;
 import java.util.Set;
-
 
 @Entity
 @Table(name = "invoices")
@@ -14,9 +12,9 @@ public class Invoice {
     @Id
     @Column(name = "invoice_id")
     private int invoiceId;
-    @Column(name = "issueDate")
+    @Column(name = "issue_date")
     private LocalDate issueDate;
-    @Column(name = "dueDate")
+    @Column(name = "due_date")
     private LocalDate dueDate;
     @Column(name = "invoice_number")
     private int invoiceNumber;

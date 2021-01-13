@@ -1,5 +1,6 @@
 package ro.nexttech.internship.serviceImpl;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,12 @@ import ro.nexttech.internship.service.PaymentService;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import ro.nexttech.internship.filters.invoices.InvoiceSpecificationBuilder;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -25,6 +32,43 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Override
+    public List<InvoiceDto> searchInvoices(String search,String sortField, String sortDirection, Integer pageSize, Integer pageIndex) {
+        List<InvoiceDto> res = new ArrayList<>();
+
+        Specification<Invoice> spec = InvoiceSpecificationBuilder.getInvoiceSpec(search);
+
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageIndex - 1, pageSize, sort);
+        Page<Invoice> pagedRes = this.invoiceRepository.findAll(spec, pageable);
+
+        res = pagedRes.stream()
+                .map(this::getDtoFromInvoice)
+                .collect(Collectors.toList());
+
+        return res;
+    }
+
+//    private InvoiceDto map (Invoice invoice) {
+//        InvoiceDto invoiceDto = new InvoiceDto();
+//
+//        invoiceDto.setInvoiceId(invoice.getInvoiceId());
+//        invoiceDto.setNumber(invoice.getInvoiceNumber());
+//        invoiceDto.setIssueDate(invoice.getIssueDate());
+//        invoiceDto.setDueDate(invoice.getDueDate());
+//        invoiceDto.setFileData(invoice.getFileData());
+//        invoiceDto.setInvoiceTotal(invoice.getInvoiceTotal());
+//        invoiceDto.setFirmId(invoice.getFirm().getFirmId());
+//        invoiceDto.setProviderId(invoice.getProvider().getProviderId());
+//        invoiceDto.setPaymentEntities(
+//                invoice.getPaymentEntities().stream().map(Payment::getPaymentId).collect(Collectors.toSet()));
+//        invoiceDto.setPaymentTotal(invoice.getPaymentTotal());
+//
+//        return invoiceDto;
+//    }
 
     @Override
     public List<Invoice> findAll(Specification<Invoice> specification) {
@@ -70,8 +114,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoice;
     }
 
-
-
     @Override
     public boolean deleteInvoice(int id) {
         try {
@@ -90,7 +132,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void updateInvoiceFromDto(InvoiceDto invoiceDto, Invoice invoice) {
-
     }
 
     @Override

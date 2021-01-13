@@ -4,11 +4,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.UserDto;
+import ro.nexttech.internship.pojo.UserPojo;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserService {
+    Optional<UserPojo> getByUserName(String user);
 
     List<User> findAll(Specification<User> specification);
 

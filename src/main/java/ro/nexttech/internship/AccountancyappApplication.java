@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class AccountancyappApplication {
-    
+
     @Bean
     public RestTemplate getRestTemplate() {
         return new RestTemplate();

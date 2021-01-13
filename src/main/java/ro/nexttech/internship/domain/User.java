@@ -1,6 +1,9 @@
 package ro.nexttech.internship.domain;
 
 
+import ro.nexttech.internship.domain.permission.UserRole;
+import ro.nexttech.internship.pojo.UserPojo;
+
 import javax.persistence.*;
 
 @Entity
@@ -24,11 +27,20 @@ public class User {
     private UserRole userRole;
     @ManyToOne
     @JoinColumn(name="firm_id", nullable = false)
-    private Firm firm;
+     private Firm firm;
     private boolean isActive;
 
     public User(){
 
+    }
+
+    public UserPojo toUser() {
+        UserPojo user = new UserPojo();
+        user.setUserName(userName);
+        user.setUserPassword(userPassword);
+        user.setUserRole(userRole);
+        user.setActive(isActive);
+        return user;
     }
 
     public User(int userId, String userName, String firstName, String lastName, String userPassword, String email, UserRole userRole, Firm firm, boolean isActive) {
