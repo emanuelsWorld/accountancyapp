@@ -20,7 +20,7 @@ import java.util.Date;
 @Service
 public class CallAnafServiceImpl implements CallAnafService {
 
-    private static final String AnafURL = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v3/ws/tva";
+    private static final String AnafURL = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v4/ws/tva";
 
     @Override
     public CompanyDetails call(Integer CUI) throws RestClientException, CompanyNotFound {

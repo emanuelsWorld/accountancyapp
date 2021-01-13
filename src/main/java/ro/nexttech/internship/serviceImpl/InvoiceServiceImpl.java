@@ -52,24 +52,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return res;
     }
 
-//    private InvoiceDto map (Invoice invoice) {
-//        InvoiceDto invoiceDto = new InvoiceDto();
-//
-//        invoiceDto.setInvoiceId(invoice.getInvoiceId());
-//        invoiceDto.setNumber(invoice.getInvoiceNumber());
-//        invoiceDto.setIssueDate(invoice.getIssueDate());
-//        invoiceDto.setDueDate(invoice.getDueDate());
-//        invoiceDto.setFileData(invoice.getFileData());
-//        invoiceDto.setInvoiceTotal(invoice.getInvoiceTotal());
-//        invoiceDto.setFirmId(invoice.getFirm().getFirmId());
-//        invoiceDto.setProviderId(invoice.getProvider().getProviderId());
-//        invoiceDto.setPaymentEntities(
-//                invoice.getPaymentEntities().stream().map(Payment::getPaymentId).collect(Collectors.toSet()));
-//        invoiceDto.setPaymentTotal(invoice.getPaymentTotal());
-//
-//        return invoiceDto;
-//    }
-
     @Override
     public List<Invoice> findAll(Specification<Invoice> specification) {
         return invoiceRepository.findAll(specification);

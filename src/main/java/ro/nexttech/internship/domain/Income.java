@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public class Income {
     @Id
     @Column(name = "income_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int incomeId;
     @Column(name = "ammount")
     private double ammount;

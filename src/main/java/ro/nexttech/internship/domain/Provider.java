@@ -8,6 +8,7 @@ import java.util.Set;
 public class Provider {
     @Id
     @Column(name="provider_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int providerId;
     @Column(name="provider_name")
     private String providerName;

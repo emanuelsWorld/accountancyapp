@@ -17,6 +17,7 @@ public class Invoice {
 
     @Id
     @Column(name = "invoice_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int invoiceId;
     @Column(name = "issue_date")
     private LocalDate issueDate;

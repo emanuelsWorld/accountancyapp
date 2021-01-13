@@ -10,6 +10,7 @@ import java.util.Set;
 public class Payment {
     @Id
     @Column(name="payment_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int paymentId;
     @Enumerated(EnumType.STRING)
     @Column(name = "type")

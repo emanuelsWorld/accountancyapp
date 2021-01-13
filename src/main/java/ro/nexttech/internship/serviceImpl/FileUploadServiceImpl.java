@@ -10,6 +10,7 @@ import ro.nexttech.internship.service.FileUploadService;
 
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
+import javax.validation.constraints.Null;
 
 import java.io.IOException;
 import java.sql.Blob;
@@ -30,10 +31,12 @@ public class FileUploadServiceImpl implements FileUploadService {
     @Override
     public boolean uploadToDb(MultipartFile file, Integer id) {
         Invoice invoice = new Invoice();
+        Optional<Invoice> value = null;
         try {
             Blob blob = new SerialBlob(file.getBytes());
 
-            var value = invoiceRepository.findById(id);
+                value = invoiceRepository.findById(id);
+
             if (value.isPresent()) {
                 invoice = value.get();
                 invoice.setFileData(blob);
@@ -47,6 +50,8 @@ public class FileUploadServiceImpl implements FileUploadService {
             e.printStackTrace();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
         }
         return false;
     }

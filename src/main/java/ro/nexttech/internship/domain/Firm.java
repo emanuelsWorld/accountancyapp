@@ -8,6 +8,7 @@ import java.util.Set;
 public class Firm {
     @Id
     @Column(name="firm_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int firmId;
     @Column(name="firm_name")
     private String firmName;
