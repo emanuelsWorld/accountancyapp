@@ -14,7 +14,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/users")
+@RequestMapping(value = "/rest/users")
 public class UsersController {
 
     private UserService userService;
@@ -25,35 +25,36 @@ public class UsersController {
     }
 
     @GetMapping
-    public List<UserDto> searchUsers(@RequestParam(value = "search") String search, @RequestParam(value = "sort" , defaultValue = "No sorting") String sort) {
-        System.out.println("Search:"+ search);
-        System.out.println("Sorting:" + sort);
+    public List<UserDto> searchUsers(@RequestParam(value = "search") String search) {
         Specification<User> spec = UserSpecificationBuilder.getUserSpec(search);
-        return UserDto.getDtoFromUserList(userService.findAll(spec));
+        return userService.getDtoFromUserList(userService.findAll(spec));
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        if (user == null) {
+    @PostMapping(produces = "application/json", consumes = "application/json")
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+        if (userDto == null) {
             return ResponseEntity.notFound().build();
         } else {
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("{/id}")
-                    .buildAndExpand(user.getUserId(), user.getUserName(), user.getUserPassword())
+                    .buildAndExpand(userDto.getUserId(), userDto.getUserName(), userDto.getUserPassword())
                     .toUri();
-            System.out.println(user.getUserName());
-            return ResponseEntity.created(uri).body(user);
+            userService.saveUserDto(userDto);
+            return ResponseEntity.created(uri).body(userDto);
         }
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return null;
+    @DeleteMapping("{id}")
+    public String deleteUser(@PathVariable("id") int id) {
+      if(userService.deleteUser(id)) {
+          return "User with id: " + id + "deleted successfully";
+      }
+      return "User deletion unsuccessful";
     }
 
-    @PutMapping("/{id}")
-    public String updateUser() {
-        return null;
+    @PutMapping("{id}")
+    public UserDto updateUser(@PathVariable("id") int id, @RequestBody UserDto userDto) {
+       return userService.updateUser(id, userDto);
     }
 
 

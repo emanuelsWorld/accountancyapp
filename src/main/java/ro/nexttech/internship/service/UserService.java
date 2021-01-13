@@ -1,10 +1,33 @@
 package ro.nexttech.internship.service;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Repository;
 import ro.nexttech.internship.domain.User;
+import ro.nexttech.internship.dto.UserDto;
 
 import java.util.List;
 
+
 public interface UserService {
+
     List<User> findAll(Specification<User> specification);
+
+    boolean saveUser(User user);
+
+    boolean saveUserDto(UserDto userDto);
+
+    User getUserFromDto(UserDto userDto);
+
+    boolean deleteUser(int id);
+
+    User findUserById(int id);
+
+    void updateUserFromDto(UserDto userDto, User user);
+
+    UserDto getDtoFromUser (User user);
+
+    List<UserDto> getDtoFromUserList (List<User> users);
+
+    UserDto updateUser(int id, UserDto userDto);
+
 }

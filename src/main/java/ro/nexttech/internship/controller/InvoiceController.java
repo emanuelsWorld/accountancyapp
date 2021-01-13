@@ -26,26 +26,25 @@ public class InvoiceController {
     @GetMapping
     public List<InvoiceDto> searchInvoices(@RequestParam(value = "search") String search) {
         Specification<Invoice> spec = InvoiceSpecificationBuilder.getInvoiceSpec(search);
-        return InvoiceDto.getDtoFromInvoiceList(invoiceService.findAll(spec));
-    }
-
-    @GetMapping("/{id}")
-    public Invoice getInvoice(@PathVariable("id") int id) {
-        return null;
+        return invoiceService.getDtoFromInvoiceList(invoiceService.findAll(spec));
     }
 
     @PostMapping
-    public ResponseEntity<Invoice> createInvoice(@RequestBody Invoice invoice) {
-        if (invoice == null) {
-            return ResponseEntity.notFound().build();
-        } else {
+    public InvoiceDto createInvoice(@RequestBody InvoiceDto invoiceDto) {
+        if (invoiceDto == null) {
             return null;
+        } else {
+            invoiceService.saveInvoiceDto(invoiceDto);
+            return invoiceDto;
         }
     }
 
-    @DeleteMapping
-    public String deleteInvoice() {
-        return null;
+    @DeleteMapping("/{id}")
+    public String deleteInvoice(@PathVariable("id") int id) {
+        if(invoiceService.deleteInvoice(id)) {
+            return "Invoice with id: " + id + "deleted successfully";
+        }
+        return "Invoice deletion unsuccessful";
     }
 
     @PutMapping("/{id}")

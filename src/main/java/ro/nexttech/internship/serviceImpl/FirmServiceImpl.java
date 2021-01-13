@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ro.nexttech.internship.domain.Firm;
+import ro.nexttech.internship.exception.FirmNotFoundException;
 import ro.nexttech.internship.repository.FirmRepository;
 import ro.nexttech.internship.service.FirmService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FirmServiceImpl implements FirmService {
@@ -23,4 +25,17 @@ public class FirmServiceImpl implements FirmService {
     public List<Firm> findAll(Specification<Firm> specification) {
         return firmRepository.findAll(specification);
     }
+
+    @Override
+    public Firm findById(int id) {
+        Optional<Firm> firmOptional = firmRepository.findById(id);
+
+        if (firmOptional.isPresent()) {
+            return firmOptional.get();
+        } else
+            return null;
+
+    }
+
+
 }
