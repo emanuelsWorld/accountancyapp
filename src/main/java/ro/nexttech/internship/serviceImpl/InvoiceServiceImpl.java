@@ -109,7 +109,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public Invoice findById(int id) {
+
+        var list=invoiceRepository.findAll();
+        for(Invoice invoice:list) {
+            if (invoice.getInvoiceId() == id)
+                return invoice;
+        }
         return null;
+
     }
 
     @Override
