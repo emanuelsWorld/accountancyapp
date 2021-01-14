@@ -6,6 +6,7 @@ import ro.nexttech.internship.dto.InvoiceDto;
 
 import java.util.List;
 public interface InvoiceService {
+
     List<InvoiceDto> searchInvoices(String search,String sortField, String sortDirection, Integer pageSize, Integer pageIndex);
 
     List<Invoice> findAll(Specification<Invoice> specification);
@@ -22,8 +23,10 @@ public interface InvoiceService {
 
     boolean deleteInvoice(int id);
 
-    Invoice findById(int id);
+    Invoice findInvoiceById(int id);
 
     void updateInvoiceFromDto(InvoiceDto invoiceDto, Invoice invoice);
+
+    InvoiceDto updateInvoice(int id, InvoiceDto invoiceDto);
 
 }

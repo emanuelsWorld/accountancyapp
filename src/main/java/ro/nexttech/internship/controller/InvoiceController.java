@@ -1,11 +1,15 @@
 package ro.nexttech.internship.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.dto.InvoiceDto;
+import ro.nexttech.internship.dto.UserDto;
 import ro.nexttech.internship.service.InvoiceService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -13,6 +17,9 @@ import java.util.List;
 public class InvoiceController {
 
     private InvoiceService invoiceService;
+
+    @Autowired
+    HttpServletRequest context;
 
     @Autowired
     public void setInvoiceService(InvoiceService invoiceService) {
@@ -48,7 +55,9 @@ public class InvoiceController {
     }
 
     @PutMapping("/{id}")
-    public String updateInvoice() {
-        return null;
+    public InvoiceDto updateInvoice(@PathVariable("id") int id, @RequestBody InvoiceDto invoiceDto) {
+        System.out.println("USER" + context.getUserPrincipal());
+        return invoiceService.updateInvoice(id, invoiceDto);
     }
+
 }

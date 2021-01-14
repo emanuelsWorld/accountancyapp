@@ -4,6 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.filters.SearchCriteria;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -11,6 +12,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class InvoiceSpecificationBuilder {
+
+    private final SearchCriteria searchCriteria = new SearchCriteria("firm",":", "1");
 
     private final List<SearchCriteria> criteriaList;
 
@@ -27,7 +30,9 @@ public class InvoiceSpecificationBuilder {
         if (criteriaList.isEmpty()) {
             return null;
         }
-
+//TODO add principal firm sc
+        criteriaList.add(searchCriteria);
+        
         List<InvoiceSpecification> specs = criteriaList.stream()
                 .map(InvoiceSpecification::new)
                 .collect(Collectors.toList());

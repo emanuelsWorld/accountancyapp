@@ -12,7 +12,9 @@ import ro.nexttech.internship.service.FirmService;
 import ro.nexttech.internship.service.InvoiceService;
 import ro.nexttech.internship.service.PaymentService;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import ro.nexttech.internship.filters.invoices.InvoiceSpecificationBuilder;
+import ro.nexttech.internship.service.ProviderService;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -32,6 +35,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private ProviderService providerService;
+
 
     @Override
     public List<InvoiceDto> searchInvoices(String search,String sortField, String sortDirection, Integer pageSize, Integer pageIndex) {
@@ -51,24 +58,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         return res;
     }
-
-//    private InvoiceDto map (Invoice invoice) {
-//        InvoiceDto invoiceDto = new InvoiceDto();
-//
-//        invoiceDto.setInvoiceId(invoice.getInvoiceId());
-//        invoiceDto.setNumber(invoice.getInvoiceNumber());
-//        invoiceDto.setIssueDate(invoice.getIssueDate());
-//        invoiceDto.setDueDate(invoice.getDueDate());
-//        invoiceDto.setFileData(invoice.getFileData());
-//        invoiceDto.setInvoiceTotal(invoice.getInvoiceTotal());
-//        invoiceDto.setFirmId(invoice.getFirm().getFirmId());
-//        invoiceDto.setProviderId(invoice.getProvider().getProviderId());
-//        invoiceDto.setPaymentEntities(
-//                invoice.getPaymentEntities().stream().map(Payment::getPaymentId).collect(Collectors.toSet()));
-//        invoiceDto.setPaymentTotal(invoice.getPaymentTotal());
-//
-//        return invoiceDto;
-//    }
 
     @Override
     public List<Invoice> findAll(Specification<Invoice> specification) {
@@ -110,6 +99,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setFirm(firmService.findById(invoiceDto.getFirmId()));
         invoice.setPaymentEntities(paymentService.findAllByIdList(invoiceDto.getPaymentEntities()));
         invoice.setInvoiceNumber(invoiceDto.getInvoiceNumber());
+        invoice.setProvider(providerService.findProviderById(invoiceDto.getProviderId()));
 
         return invoice;
     }
@@ -126,12 +116,60 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice findById(int id) {
-        return null;
+    public Invoice findInvoiceById(int id) {
+        return invoiceRepository.findById(id).orElse(null);
     }
 
     @Override
     public void updateInvoiceFromDto(InvoiceDto invoiceDto, Invoice invoice) {
+
+        if (invoiceDto.getDueDate() != null) {
+            invoice.setDueDate(invoiceDto.getDueDate());
+        }
+
+        if (invoiceDto.getIssueDate() != null) {
+            invoice.setIssueDate(invoiceDto.getIssueDate());
+        }
+
+        if (invoiceDto.getFileData() != null) {
+            invoice.setFileData(invoiceDto.getFileData());
+        }
+
+        if (invoiceDto.getInvoiceId() != 0) {
+            invoice.setInvoiceId(invoiceDto.getInvoiceId());
+        }
+
+        if (invoiceDto.getInvoiceNumber() != 0) {
+            invoice.setInvoiceNumber(invoiceDto.getInvoiceNumber());
+        }
+
+        if (invoiceDto.getProviderId() != 0) {
+            invoice.setProvider(providerService.findProviderById(invoiceDto.getProviderId()));
+        }
+
+        if (invoiceDto.getFirmId() != 0) {
+            invoice.setFirm(firmService.findById(invoiceDto.getFirmId()));
+        }
+
+        if (invoiceDto.getPaymentTotal() != 0) {
+            invoice.setPaymentTotal(invoiceDto.getPaymentTotal());
+        }
+
+        if (invoiceDto.getInvoiceTotal() != 0) {
+            invoice.setInvoiceTotal(invoiceDto.getInvoiceTotal());
+        }
+
+        if (invoiceDto.getPaymentEntities() != null) {
+            invoice.setPaymentEntities(paymentService.findAllByIdList(invoiceDto.getPaymentEntities()));
+        }
+        invoiceRepository.save(invoice);
+    }
+
+    @Override
+    public InvoiceDto updateInvoice(int id, InvoiceDto invoiceDto) {
+        Invoice invoice = findInvoiceById(id);
+        updateInvoiceFromDto(invoiceDto, invoice);
+        return getDtoFromInvoice(invoice);
     }
 
     @Override
@@ -146,11 +184,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceDto.setFirmId(invoice.getFirm().getFirmId());
         invoiceDto.setProviderId(invoice.getProvider().getProviderId());
         invoiceDto.setPaymentTotal(invoice.getPaymentTotal());
-        invoiceDto.setPaymentEntities(
-                invoice.getPaymentEntities().stream()
-                        .map(Payment::getPaymentId)
-                        .collect(Collectors.toSet()));
 
+        if(!invoice.getPaymentEntities().isEmpty()) {
+            invoiceDto.setPaymentEntities(
+                    invoice.getPaymentEntities().stream()
+                            .map(Payment::getPaymentId)
+                            .collect(Collectors.toSet()));
+        }
         return invoiceDto;
     }
 

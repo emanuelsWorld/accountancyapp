@@ -1,11 +1,5 @@
 package ro.nexttech.internship.dto;
 
-import ro.nexttech.internship.domain.User;
-import ro.nexttech.internship.domain.permission.UserRole;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class UserDto {
 
     private int userId;
@@ -14,7 +8,7 @@ public class UserDto {
     private String lastName;
     private String userPassword;
     private String email;
-    private UserRole userRole;
+    private String userRole;
     private int firmId;
     private boolean isActive;
 
@@ -69,13 +63,9 @@ public class UserDto {
         this.email = email;
     }
 
-    public UserRole setUserRole() {
-        return userRole;
-    }
+    public String getUserRole() { return userRole; }
 
-    public UserRole getUserRole() { return userRole; }
-
-    public void setUserRole(UserRole role) {
+    public void setUserRole(String role) {
         this.userRole = role;
     }
 

@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ro.nexttech.internship.domain.permission.UserRole;
 import ro.nexttech.internship.security.filter.JwtRequestFilter;
 
 @Configuration
@@ -49,8 +50,8 @@ public class SpringConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/")
-                .permitAll()
+                .antMatchers("/rest/users")
+                .hasRole(UserRole.ADMIN.toString())
                 .and()
 
                 .authorizeRequests()

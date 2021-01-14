@@ -11,6 +11,7 @@ import ro.nexttech.internship.filters.users.UserSpecificationBuilder;
 import ro.nexttech.internship.service.UserService;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -32,6 +33,7 @@ public class UsersController {
 
     @PostMapping(produces = "application/json", consumes = "application/json")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+        System.out.println("DTO: " + userDto.getUserPassword() + " FIRMiD:  " + userDto.getFirmId());
         if (userDto == null) {
             return ResponseEntity.notFound().build();
         } else {
