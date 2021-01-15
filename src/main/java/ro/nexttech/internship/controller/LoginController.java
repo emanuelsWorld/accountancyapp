@@ -43,7 +43,7 @@ public class LoginController {
         return new AuthResponseDto(jwtService.generateToken(customUserDetailsService.loadUserByUsername(userRequest.getUsername())));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/test-jwt")
     public String getAuthenticationManager() {
         return "Hello JWT";

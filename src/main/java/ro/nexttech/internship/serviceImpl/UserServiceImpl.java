@@ -2,9 +2,13 @@ package ro.nexttech.internship.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.UserDto;
+import ro.nexttech.internship.dto.UserRegistrationDto;
+import ro.nexttech.internship.exception.DuplicateUserException;
+import ro.nexttech.internship.exception.FirmNotFoundException;
 import ro.nexttech.internship.pojo.UserPojo;
 import ro.nexttech.internship.repository.UserRepository;
 import ro.nexttech.internship.service.FirmService;
@@ -12,13 +16,16 @@ import ro.nexttech.internship.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private FirmService firmService;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -56,8 +63,7 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.save(getUserFromDto(userDto));
             return true;
-        }
-        catch  (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -138,13 +144,13 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getDtoFromUserList(List<User> users) {
         return users.stream()
                 .map(this::getDtoFromUser)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @Override
     public UserDto updateUser(int id, UserDto userDto) {
         User user = findUserById(id);
-        updateUserFromDto(userDto,user);
+        updateUserFromDto(userDto, user);
         saveUser(user);
         return getDtoFromUser(user);
     }
@@ -164,4 +170,29 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    public UserPojo register(UserRegistrationDto userRegistrationDto) throws FirmNotFoundException, DuplicateUserException {
+        User user = getUserFromUserRegistrationDto(userRegistrationDto);
+        if (findAllDuplicatesUsersByEmailOrUsername(user).isEmpty()) {
+            saveUser(user);
+            return getByUserName(user.getUserName()).orElse(null);
+        } else
+            throw new DuplicateUserException("User or email already used");
+    }
+
+    private List<User> findAllDuplicatesUsersByEmailOrUsername(User userRegistration) {
+        return userRepository.findAll().stream()
+                .filter(user -> user.getUserName().equals(userRegistration.getUserName()) || user.getEmail().equals(userRegistration.getEmail()))
+                .collect(toList());
+    }
+
+    private User getUserFromUserRegistrationDto(UserRegistrationDto userDto) throws FirmNotFoundException {
+        User user = new User();
+        user.setUserName(userDto.getUserName());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setUserPassword(bCryptPasswordEncoder.encode(userDto.getUserPassword()));
+        user.setEmail(userDto.getEmail());
+        user.setFirm(firmService.findFirmByName(userDto.getFirmName()));
+        return user;
+    }
 }
