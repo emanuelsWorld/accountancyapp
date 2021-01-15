@@ -8,8 +8,10 @@ import java.util.List;
 
 public interface FirmService {
 
-    List<Firm> findAll (Specification<Firm> specification);
+    List<Firm> findAll(Specification<Firm> specification);
 
-    Firm findById (int id);
+    Firm findById(int id);
+
+    Firm findFirmByName(String firmName) throws FirmNotFoundException;
 
 }

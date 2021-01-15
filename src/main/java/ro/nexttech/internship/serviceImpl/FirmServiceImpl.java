@@ -2,6 +2,7 @@ package ro.nexttech.internship.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.exception.FirmNotFoundException;
@@ -34,8 +35,17 @@ public class FirmServiceImpl implements FirmService {
             return firmOptional.get();
         } else
             return null;
-
     }
 
-
+    @Override
+    public Firm findFirmByName(String firmName) throws FirmNotFoundException {
+        Optional<Firm> firmOptional = firmRepository.findByFirmName(firmName);
+        if (firmOptional.isPresent()) {
+            return firmOptional.get();
+        } else
+            throw new FirmNotFoundException("Firm not found");
+    }
 }
+
+
+
