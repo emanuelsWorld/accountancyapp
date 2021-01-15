@@ -1,12 +1,12 @@
 package ro.nexttech.internship.serviceImpl;
 
 
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.repository.InvoiceRepository;
 import ro.nexttech.internship.service.FileUploadService;
+import ro.nexttech.internship.service.InvoiceService;
 
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
@@ -21,54 +21,45 @@ import java.util.Optional;
 @Service
 public class FileUploadServiceImpl implements FileUploadService {
 
-    private InvoiceRepository invoiceRepository;
+    private InvoiceService invoiceService;
 
-    public FileUploadServiceImpl(InvoiceRepository invoiceRepository) {
-        this.invoiceRepository = invoiceRepository;
+    public FileUploadServiceImpl(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
     }
 
 
     @Override
     public boolean uploadToDb(MultipartFile file, Integer id) {
         Invoice invoice = new Invoice();
-        Optional<Invoice> value = null;
+        Blob blob = null;
         try {
-            Blob blob = new SerialBlob(file.getBytes());
-
-                value = invoiceRepository.findById(id);
-
-            if (value.isPresent()) {
-                invoice = value.get();
-                invoice.setFileData(blob);
-                invoiceRepository.save(invoice);
-                return true;
-            }
-
-        } catch (SerialException throwables) {
+            blob = new SerialBlob(file.getBytes());
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (NullPointerException npe) {
-            npe.printStackTrace();
         }
+
+        invoice = invoiceService.findById(id);
+        if (invoice != null) {
+            invoice.setFileData(blob);
+            invoiceService.saveInvoice(invoice);
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public Blob downloadFile(Integer id) {
-        Optional<Invoice> invoice;
-        if(Invoice.getInvoiceMap().get(id)!=null) {
-            invoice= Optional.ofNullable(Invoice.getInvoiceMap().get(id));
-        }
+        Invoice invoice;
+        if (Invoice.getInvoiceMap().get(id) != null) {
+            invoice = Invoice.getInvoiceMap().get(id);
+        } else
+            invoice = invoiceService.findById(id);
+        if (invoice != null)
+            return invoice.getFileData();
         else
-            invoice = invoiceRepository.findById(id);
-
-        if (invoice.isPresent())
-            return invoice.get().getFileData();
-        else {
             return null;
-        }
     }
 }

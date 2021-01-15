@@ -1,6 +1,7 @@
 package ro.nexttech.internship.filters.invoices;
 
 import org.springframework.data.jpa.domain.Specification;
+import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.filters.SearchCriteria;
 
@@ -73,6 +74,9 @@ public class InvoiceSpecification implements Specification<Invoice> {
     public Predicate getEqualPredicate(Root<Invoice> root, CriteriaBuilder criteriaBuilder) {
         if (root.get(criteria.getKey()).getJavaType() == LocalDate.class) {
             criteria.setValue(getDateFromString(criteria.getValue().toString()));
+            return criteriaBuilder.equal(root.get(criteria.getKey()), criteria.getValue());
+        }
+        if (root.get(criteria.getKey()).getJavaType() == Firm.class) {
             return criteriaBuilder.equal(root.get(criteria.getKey()), criteria.getValue());
         }
         try {

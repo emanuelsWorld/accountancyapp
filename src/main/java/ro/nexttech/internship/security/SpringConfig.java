@@ -19,26 +19,23 @@ import ro.nexttech.internship.security.filter.JwtRequestFilter;
 public class SpringConfig extends WebSecurityConfigurerAdapter {
     private final CustomUserDetailsService userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public SpringConfig(CustomUserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
+    public SpringConfig(CustomUserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDetailsService = userDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(encodePWD());
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder encodePWD() {
-        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -49,7 +46,7 @@ public class SpringConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/")
+                .antMatchers("/rest/users/*")
                 .permitAll()
                 .and()
 
@@ -62,27 +59,5 @@ public class SpringConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
-
-//        http
-//                .csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/login", "/sing-up").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-//                .addFilter(new JWTAuthorizationFilter(authenticationManager()));
-
     }
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .antMatchers("/admin").hasRole("ADMIN")
-//                .antMatchers("/manager").hasAnyRole("MANAGER", "ADMIN")
-//                .antMatchers("/user").hasAnyRole("USER", "MANAGER", "ADMIN")
-//                .antMatchers("/").permitAll()
-//                .and().formLogin();
-//    }
 }
