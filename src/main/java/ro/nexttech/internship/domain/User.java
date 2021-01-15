@@ -10,6 +10,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @Column(name="user_id")
+    @GeneratedValue
     private int userId;
     @Column(name="user_name")
     private String userName;

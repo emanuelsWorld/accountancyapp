@@ -2,16 +2,13 @@ package ro.nexttech.internship.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.UserDto;
 import ro.nexttech.internship.filters.users.UserSpecificationBuilder;
 import ro.nexttech.internship.service.UserService;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
