@@ -51,7 +51,7 @@ public class SpringConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers("/rest/users")
-                .hasRole(UserRole.ADMIN.toString())
+                .hasRole("ADMIN")
                 .and()
 
                 .authorizeRequests()

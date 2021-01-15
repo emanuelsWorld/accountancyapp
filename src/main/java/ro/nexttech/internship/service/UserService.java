@@ -2,6 +2,7 @@ package ro.nexttech.internship.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.UserDto;
 import ro.nexttech.internship.pojo.UserPojo;
@@ -9,7 +10,7 @@ import ro.nexttech.internship.pojo.UserPojo;
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 public interface UserService {
     Optional<UserPojo> getByUserName(String user);
 
@@ -21,7 +22,9 @@ public interface UserService {
 
     User getUserFromDto(UserDto userDto);
 
-    boolean deleteUser(int id);
+    User findByUserName(String userName);
+
+    boolean deleteUser(int id, String userName);
 
     User findUserById(int id);
 

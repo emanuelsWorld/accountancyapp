@@ -1,40 +1,19 @@
-package ro.nexttech.internship.domain;
+package ro.nexttech.internship.dto;
+
+import ro.nexttech.internship.domain.Firm;
+import ro.nexttech.internship.domain.TransactionType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "incomes")
-public class Income {
-    @Id
-    @Column(name = "income_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class IncomeDto {
+
     private int incomeId;
-    @Column(name = "ammount")
     private double ammount;
-    @Column(name = "issueDate")
     private LocalDate issueDate;
-    @Column(name = "income_name")
     private String incomeName;
-    @Column(name = "type")
-    @Enumerated(EnumType.STRING)
     private TransactionType type;
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Firm firm;
-
-    public Income() {
-
-    }
-
-    public Income(int incomeId, double ammount, LocalDate issueDate, String incomeName, TransactionType type, Firm firm) {
-        this.incomeId = incomeId;
-        this.ammount = ammount;
-        this.issueDate = issueDate;
-        this.incomeName = incomeName;
-        this.type = type;
-        this.firm = firm;
-    }
+    private int firmId;
 
     public int getIncomeId() {
         return incomeId;
@@ -76,11 +55,11 @@ public class Income {
         this.type = type;
     }
 
-    public Firm getFirm() {
-        return firm;
+    public int getFirmId() {
+        return firmId;
     }
 
-    public void setFirm(Firm firm) {
-        this.firm = firm;
+    public void setFirmId(int firmId) {
+        this.firmId = firmId;
     }
 }

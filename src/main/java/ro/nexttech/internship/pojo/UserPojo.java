@@ -1,7 +1,5 @@
 package ro.nexttech.internship.pojo;
 
-import ro.nexttech.internship.domain.permission.UserRole;
-
 public class UserPojo {
 
     private String userName;

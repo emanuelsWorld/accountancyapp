@@ -4,17 +4,17 @@ package ro.nexttech.internship.serviceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.domain.Payment;
+import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.InvoiceDto;
 import ro.nexttech.internship.repository.InvoiceRepository;
-import ro.nexttech.internship.service.FirmService;
-import ro.nexttech.internship.service.InvoiceService;
-import ro.nexttech.internship.service.PaymentService;
+import ro.nexttech.internship.service.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import org.springframework.data.domain.Page;
@@ -22,7 +22,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import ro.nexttech.internship.filters.invoices.InvoiceSpecificationBuilder;
-import ro.nexttech.internship.service.ProviderService;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -39,12 +38,18 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Autowired
     private ProviderService providerService;
 
+    @Autowired
+    private UserService userService;
+
 
     @Override
-    public List<InvoiceDto> searchInvoices(String search,String sortField, String sortDirection, Integer pageSize, Integer pageIndex) {
+    public List<InvoiceDto> searchInvoices(String userName, String search,String sortField, String sortDirection, Integer pageSize, Integer pageIndex) {
         List<InvoiceDto> res = new ArrayList<>();
 
-        Specification<Invoice> spec = InvoiceSpecificationBuilder.getInvoiceSpec(search);
+        User user = userService.findByUserName(userName);
+        System.out.println("Identified user: " + user.getUserName());
+
+        Specification<Invoice> spec = InvoiceSpecificationBuilder.getInvoiceSpec(search, user.getFirm());
 
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
@@ -76,7 +81,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public boolean saveInvoiceDto(InvoiceDto invoiceDto) {
+    public boolean saveInvoiceDto(InvoiceDto invoiceDto, String userName) {
+        User user = userService.findByUserName(userName);
+        if (user.getFirm().getFirmId() != invoiceDto.getFirmId()) {
+            System.out.println("You can't add invoices for firm: " + user.getFirm().getFirmName());
+            return false;
+        }
+
         try {
             invoiceRepository.save(getInvoiceFromDto(invoiceDto));
             return true;
@@ -105,7 +116,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public boolean deleteInvoice(int id) {
+    public boolean deleteInvoice(int id, String userName) {
+        Invoice invoice = invoiceRepository.findById(id).orElse(null);
+        User user = userService.findByUserName(userName);
+
+        if (invoice.getFirm() != user.getFirm()) {
+            return false;
+        }
+
         try {
             invoiceRepository.deleteById(id);
             return true;
@@ -116,7 +134,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice findInvoiceById(int id) {
+    public Invoice findById(int id) {
         return invoiceRepository.findById(id).orElse(null);
     }
 
@@ -166,10 +184,26 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceDto updateInvoice(int id, InvoiceDto invoiceDto) {
-        Invoice invoice = findInvoiceById(id);
+    public InvoiceDto updateInvoice(int id, InvoiceDto invoiceDto, String userName) {
+        User user = userService.findByUserName(userName);
+        Invoice invoice = findById(id);
+
+        if (invoice.getFirm() == user.getFirm()) {
         updateInvoiceFromDto(invoiceDto, invoice);
         return getDtoFromInvoice(invoice);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Set<Invoice> findAllByIdSet(Set<Integer> idSet) {
+        Set<Optional<Invoice>> invoiceOptionals = idSet.stream()
+                .map(n->invoiceRepository.findById(n))
+                .collect(Collectors.toSet());
+
+        return invoiceOptionals.stream()
+                .map(n-> n.orElse(null)).collect(Collectors.toSet());
     }
 
     @Override

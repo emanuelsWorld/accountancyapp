@@ -1,7 +1,6 @@
 package ro.nexttech.internship.domain;
 
 
-import ro.nexttech.internship.domain.permission.UserRole;
 import ro.nexttech.internship.pojo.UserPojo;
 
 import javax.persistence.*;
@@ -11,6 +10,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @Column(name="user_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int userId;
     @Column(name="user_name")
     private String userName;

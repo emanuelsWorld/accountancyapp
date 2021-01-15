@@ -3,14 +3,21 @@ package ro.nexttech.internship.domain;
 import javax.persistence.*;
 import java.sql.Blob;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
 @Table(name = "invoices")
 public class Invoice {
+    private static Map<Integer,Invoice> invoiceMap=new HashMap<>();
+    public static Map<Integer, Invoice> getInvoiceMap() {
+        return invoiceMap;
+    }
 
     @Id
     @Column(name = "invoice_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int invoiceId;
     @Column(name = "issue_date")
     private LocalDate issueDate;

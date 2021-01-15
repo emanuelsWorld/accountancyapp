@@ -1,6 +1,7 @@
 package ro.nexttech.internship.filters.users;
 
 import org.springframework.data.jpa.domain.Specification;
+import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.filters.SearchCriteria;
 
@@ -24,10 +25,11 @@ public class UserSpecificationBuilder {
         return this;
     }
 
-    public Specification<User> build() {
+    public Specification<User> build(Firm firm) {
         if (criteriaList.isEmpty())
             return null;
 
+        criteriaList.add(new SearchCriteria("firm",":", firm));
         List<UserSpecification> specs = criteriaList.stream()
                 .map(UserSpecification::new)
                 .collect(Collectors.toList());
@@ -39,7 +41,7 @@ public class UserSpecificationBuilder {
         return result;
     }
 
-    public static Specification<User> getUserSpec(String search) {
+    public static Specification<User> getUserSpec(String search, Firm firm) {
         UserSpecificationBuilder builder = new UserSpecificationBuilder();
         Pattern pattern = Pattern.compile("(\\w+?)([:]|[<]|[>])(\\w+?),");
         Matcher matcher = pattern.matcher(search + ",");
@@ -48,7 +50,7 @@ public class UserSpecificationBuilder {
             builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
         }
 
-        return builder.build();
+        return builder.build(firm);
     }
 
 }

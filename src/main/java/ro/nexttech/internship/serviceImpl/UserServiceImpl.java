@@ -2,7 +2,7 @@ package ro.nexttech.internship.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.UserDto;
 import ro.nexttech.internship.pojo.UserPojo;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
@@ -64,7 +64,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUser(int id) {
+    public boolean deleteUser(int id, String userName) {
+        User userAdmin = userRepository.findByUserName(userName).orElse(null);
+        User userToDelete = userRepository.findByUserName(userName).orElse(null);
+
+        if (userAdmin == null || userToDelete == null || userAdmin.getFirm() != userToDelete.getFirm()) {
+            System.out.println("not equal firms!!!");
+            return false;
+        }
+
         try {
             userRepository.deleteById(id);
             return true;
@@ -78,10 +86,7 @@ public class UserServiceImpl implements UserService {
     public User findUserById(int id) {
         Optional<User> userOptional = userRepository.findById(id);
 
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        } else
-            return null;
+        return userOptional.orElse(null);
     }
 
     @Override
@@ -161,8 +166,12 @@ public class UserServiceImpl implements UserService {
         user.setUserRole(userDto.getUserRole());
         user.setFirm(firmService.findById(userDto.getFirmId()));
         user.setActive(userDto.isActive());
-
         return user;
+    }
+
+    @Override
+    public User findByUserName(String userName) {
+        return userRepository.findByUserName(userName).orElse(null);
     }
 
 }
