@@ -63,14 +63,23 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.save(getUserFromDto(userDto));
             return true;
-        } catch (Exception e) {
+        }
+        catch  (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
     @Override
-    public boolean deleteUser(int id) {
+    public boolean deleteUser(int id, String userName) {
+        User userAdmin = userRepository.findByUserName(userName).orElse(null);
+        User userToDelete = userRepository.findByUserName(userName).orElse(null);
+
+        if (userAdmin == null || userToDelete == null || userAdmin.getFirm() != userToDelete.getFirm()) {
+            System.out.println("not equal firms!!!");
+            return false;
+        }
+
         try {
             userRepository.deleteById(id);
             return true;
@@ -84,10 +93,7 @@ public class UserServiceImpl implements UserService {
     public User findUserById(int id) {
         Optional<User> userOptional = userRepository.findById(id);
 
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        } else
-            return null;
+        return userOptional.orElse(null);
     }
 
     @Override
@@ -168,6 +174,11 @@ public class UserServiceImpl implements UserService {
         user.setFirm(firmService.findById(userDto.getFirmId()));
         user.setActive(userDto.isActive());
         return user;
+    }
+
+    @Override
+    public User findByUserName(String userName) {
+        return userRepository.findByUserName(userName).orElse(null);
     }
 
     public UserPojo register(UserRegistrationDto userRegistrationDto) throws FirmNotFoundException, DuplicateUserException {

@@ -22,7 +22,9 @@ public interface UserService {
 
     User getUserFromDto(UserDto userDto);
 
-    boolean deleteUser(int id);
+    User findByUserName(String userName);
+
+    boolean deleteUser(int id, String userName);
 
     User findUserById(int id);
 

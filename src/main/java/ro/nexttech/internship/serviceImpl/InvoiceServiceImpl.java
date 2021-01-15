@@ -4,15 +4,17 @@ package ro.nexttech.internship.serviceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.domain.Payment;
+import ro.nexttech.internship.domain.User;
 import ro.nexttech.internship.dto.InvoiceDto;
 import ro.nexttech.internship.repository.InvoiceRepository;
-import ro.nexttech.internship.service.FirmService;
-import ro.nexttech.internship.service.InvoiceService;
-import ro.nexttech.internship.service.PaymentService;
+import ro.nexttech.internship.service.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import org.springframework.data.domain.Page;
@@ -33,11 +35,21 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private ProviderService providerService;
+
+    @Autowired
+    private UserService userService;
+
+
     @Override
-    public List<InvoiceDto> searchInvoices(String search,String sortField, String sortDirection, Integer pageSize, Integer pageIndex) {
+    public List<InvoiceDto> searchInvoices(String userName, String search,String sortField, String sortDirection, Integer pageSize, Integer pageIndex) {
         List<InvoiceDto> res = new ArrayList<>();
 
-        Specification<Invoice> spec = InvoiceSpecificationBuilder.getInvoiceSpec(search);
+        User user = userService.findByUserName(userName);
+        System.out.println("Identified user: " + user.getUserName());
+
+        Specification<Invoice> spec = InvoiceSpecificationBuilder.getInvoiceSpec(search, user.getFirm());
 
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
@@ -69,7 +81,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public boolean saveInvoiceDto(InvoiceDto invoiceDto) {
+    public boolean saveInvoiceDto(InvoiceDto invoiceDto, String userName) {
+        User user = userService.findByUserName(userName);
+        if (user.getFirm().getFirmId() != invoiceDto.getFirmId()) {
+            System.out.println("You can't add invoices for firm: " + user.getFirm().getFirmName());
+            return false;
+        }
+
         try {
             invoiceRepository.save(getInvoiceFromDto(invoiceDto));
             return true;
@@ -92,12 +110,20 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setFirm(firmService.findById(invoiceDto.getFirmId()));
         invoice.setPaymentEntities(paymentService.findAllByIdList(invoiceDto.getPaymentEntities()));
         invoice.setInvoiceNumber(invoiceDto.getInvoiceNumber());
+        invoice.setProvider(providerService.findProviderById(invoiceDto.getProviderId()));
 
         return invoice;
     }
 
     @Override
-    public boolean deleteInvoice(int id) {
+    public boolean deleteInvoice(int id, String userName) {
+        Invoice invoice = invoiceRepository.findById(id).orElse(null);
+        User user = userService.findByUserName(userName);
+
+        if (invoice.getFirm() != user.getFirm()) {
+            return false;
+        }
+
         try {
             invoiceRepository.deleteById(id);
             return true;
@@ -109,18 +135,75 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public Invoice findById(int id) {
-
-        var list=invoiceRepository.findAll();
-        for(Invoice invoice:list) {
-            if (invoice.getInvoiceId() == id)
-                return invoice;
-        }
-        return null;
-
+        return invoiceRepository.findById(id).orElse(null);
     }
 
     @Override
     public void updateInvoiceFromDto(InvoiceDto invoiceDto, Invoice invoice) {
+
+        if (invoiceDto.getDueDate() != null) {
+            invoice.setDueDate(invoiceDto.getDueDate());
+        }
+
+        if (invoiceDto.getIssueDate() != null) {
+            invoice.setIssueDate(invoiceDto.getIssueDate());
+        }
+
+        if (invoiceDto.getFileData() != null) {
+            invoice.setFileData(invoiceDto.getFileData());
+        }
+
+        if (invoiceDto.getInvoiceId() != 0) {
+            invoice.setInvoiceId(invoiceDto.getInvoiceId());
+        }
+
+        if (invoiceDto.getInvoiceNumber() != 0) {
+            invoice.setInvoiceNumber(invoiceDto.getInvoiceNumber());
+        }
+
+        if (invoiceDto.getProviderId() != 0) {
+            invoice.setProvider(providerService.findProviderById(invoiceDto.getProviderId()));
+        }
+
+        if (invoiceDto.getFirmId() != 0) {
+            invoice.setFirm(firmService.findById(invoiceDto.getFirmId()));
+        }
+
+        if (invoiceDto.getPaymentTotal() != 0) {
+            invoice.setPaymentTotal(invoiceDto.getPaymentTotal());
+        }
+
+        if (invoiceDto.getInvoiceTotal() != 0) {
+            invoice.setInvoiceTotal(invoiceDto.getInvoiceTotal());
+        }
+
+        if (invoiceDto.getPaymentEntities() != null) {
+            invoice.setPaymentEntities(paymentService.findAllByIdList(invoiceDto.getPaymentEntities()));
+        }
+        invoiceRepository.save(invoice);
+    }
+
+    @Override
+    public InvoiceDto updateInvoice(int id, InvoiceDto invoiceDto, String userName) {
+        User user = userService.findByUserName(userName);
+        Invoice invoice = findById(id);
+
+        if (invoice.getFirm() == user.getFirm()) {
+        updateInvoiceFromDto(invoiceDto, invoice);
+        return getDtoFromInvoice(invoice);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Set<Invoice> findAllByIdSet(Set<Integer> idSet) {
+        Set<Optional<Invoice>> invoiceOptionals = idSet.stream()
+                .map(n->invoiceRepository.findById(n))
+                .collect(Collectors.toSet());
+
+        return invoiceOptionals.stream()
+                .map(n-> n.orElse(null)).collect(Collectors.toSet());
     }
 
     @Override
@@ -135,11 +218,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceDto.setFirmId(invoice.getFirm().getFirmId());
         invoiceDto.setProviderId(invoice.getProvider().getProviderId());
         invoiceDto.setPaymentTotal(invoice.getPaymentTotal());
-        invoiceDto.setPaymentEntities(
-                invoice.getPaymentEntities().stream()
-                        .map(Payment::getPaymentId)
-                        .collect(Collectors.toSet()));
 
+        if(!invoice.getPaymentEntities().isEmpty()) {
+            invoiceDto.setPaymentEntities(
+                    invoice.getPaymentEntities().stream()
+                            .map(Payment::getPaymentId)
+                            .collect(Collectors.toSet()));
+        }
         return invoiceDto;
     }
 

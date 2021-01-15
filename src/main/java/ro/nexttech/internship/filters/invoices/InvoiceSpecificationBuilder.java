@@ -1,6 +1,7 @@
 package ro.nexttech.internship.filters.invoices;
 
 import org.springframework.data.jpa.domain.Specification;
+import ro.nexttech.internship.domain.Firm;
 import ro.nexttech.internship.domain.Invoice;
 import ro.nexttech.internship.filters.SearchCriteria;
 
@@ -23,10 +24,13 @@ public class InvoiceSpecificationBuilder {
         return this;
     }
 
-    public Specification<Invoice> build() {
+    public Specification<Invoice> build(Firm firm) {
         if (criteriaList.isEmpty()) {
             return null;
         }
+
+        SearchCriteria searchCriteria = new SearchCriteria("firm",":", firm);
+        criteriaList.add(searchCriteria);
 
         List<InvoiceSpecification> specs = criteriaList.stream()
                 .map(InvoiceSpecification::new)
@@ -41,7 +45,7 @@ public class InvoiceSpecificationBuilder {
         return result;
     }
 
-    public static Specification<Invoice> getInvoiceSpec(String search) {
+    public static Specification<Invoice> getInvoiceSpec(String search, Firm firm) {
         InvoiceSpecificationBuilder builder = new InvoiceSpecificationBuilder();
         Pattern pattern = Pattern.compile("(\\w+?)([:]|[<]|[>])((\\w+?)|(\\d{4}-\\d{2}-\\d{2})),");
         Matcher matcher = pattern.matcher(search + ",");
@@ -50,7 +54,9 @@ public class InvoiceSpecificationBuilder {
             builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
         }
 
-        return builder.build();
+        return builder.build(firm);
     }
+
+
 }
 

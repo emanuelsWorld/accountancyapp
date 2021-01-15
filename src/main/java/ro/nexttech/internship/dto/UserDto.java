@@ -1,5 +1,11 @@
 package ro.nexttech.internship.dto;
 
+import ro.nexttech.internship.domain.User;
+import ro.nexttech.internship.domain.permission.UserRole;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class UserDto {
 
     private int userId;
@@ -63,9 +69,7 @@ public class UserDto {
         this.email = email;
     }
 
-    public String getUserRole() {
-        return userRole;
-    }
+    public String getUserRole() { return userRole; }
 
     public void setUserRole(String role) {
         this.userRole = role;
